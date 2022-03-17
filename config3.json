@@ -1,0 +1,41 @@
+{
+    "askSignature": false,
+    "nameMethod": "siecle",
+    "tests":[
+        {
+            "test": "siecle(2016)",
+            "expected": 21,
+            "errorFeedback": "2016 is in the 21th century"
+        },
+        {
+            "test": "siecle(2000)",
+            "expected": 20,
+            "errorFeedback": "2020 is in the 20th century"
+        },
+        {
+            "test": "siecle(1900)",
+            "expected": 19,
+            "errorFeedback": "1900 is in the 19 century"
+        },
+        {
+            "test": "siecle(1001)",
+            "expected": 11,
+            "errorFeedback": "1001 is in the 11th century"
+        },
+        {
+            "test": "siecle(1099)",
+            "expected": 11,
+            "errorFeedback": "1099 is in the 11th century"
+        },
+        {
+            "test": "siecle(0)",
+            "expected": 0,
+            "errorFeedback": "0 is in the century 0"
+        },
+        {
+            "test": "siecle(1)",
+            "expected": 1,
+            "errorFeedback": "1 is in the 1st century"
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "askSignature": false,
+    "nameMethod": "quetelet",
+    "tests":[
+        {
+            "test": "quetelet(2, 80)",
+            "expected": "normal",
+            "errorFeedback": "2m and 80kg should give normal"
+        },
+        {
+            "test": "quetelet(2, 100)",
+            "expected": "normal",
+            "errorFeedback": "2m and 100kg should give normal"
+        },
+        {
+            "test": "quetelet(2, 120)",
+            "expected": "embonpoint",
+            "errorFeedback": "2m and 120kg should give embonpoint"
+        }
+    ]
+}

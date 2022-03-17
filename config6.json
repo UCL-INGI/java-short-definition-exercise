@@ -1,0 +1,56 @@
+{
+    "askSignature": false,
+    "nameMethod": "ordonne",
+    "tests":[
+        {
+            "test": "ordonne(1, 2, 3)",
+            "expected": true,
+            "errorFeedback": "With 1, 2, 3 is ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(3, 2, 1)",
+            "expected": false,
+            "errorFeedback": "With 1, 2, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(1, 3, 2)",
+            "expected": false,
+            "errorFeedback": "With 1, 2, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(2, 1, 3)",
+            "expected": false,
+            "errorFeedback": "With 2, 1, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(1, -1, 3)",
+            "expected": false,
+            "errorFeedback": "With 1, -1, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(3, 3, 3)",
+            "expected": false,
+            "errorFeedback": "With 3, 3, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(1, 3, 3)",
+            "expected": false,
+            "errorFeedback": "With 1, 3, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(1, 1, 3)",
+            "expected": false,
+            "errorFeedback": "With 1, 1, 3 is not ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(-1, 0, 3)",
+            "expected": true,
+            "errorFeedback": "With -1, 0, 3 is ordonne but your code returns the opposite"
+        },
+        {
+            "test": "ordonne(3, 3, 3)",
+            "expected": false,
+            "errorFeedback": "With 3, 3, 3 is not ordonne but your code returns the opposite"
+        }
+    ]
+}
