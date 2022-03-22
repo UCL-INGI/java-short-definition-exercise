@@ -1,0 +1,32 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "min",
+    "tests":[
+        {
+            "test": "min(5, 10, 15, 20)",
+            "expected": 5,
+            "errorFeedback": "With 5, 10, 15 and 20, min should give 5"
+        },
+        {
+            "test": "min(0, 15, -10, 5)",
+            "expected": -10,
+            "errorFeedback": "With 0, 15, -10 and 5, min should give -10"
+        },
+        {
+            "test": "min(-5, -10, -15, -20)",
+            "expected": -20,
+            "errorFeedback": "With -5, -10, -15 and -20, min should give -20"
+        },
+        {
+            "test": "min(-1, 0, 1, -2)",
+            "expected": -2,
+            "errorFeedback": "With -1, 0, 1 and -2, min should give -2"
+        },
+        {
+            "test": "min(3, 2, 1, 0)",
+            "expected": 0,
+            "errorFeedback": "With 3, 2, 1 and 0, min should give 0"
+        }
+    ]
+}

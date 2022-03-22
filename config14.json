@@ -1,0 +1,27 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "mediane",
+    "tests":[
+        {
+            "test": "mediane(5, 7, 9)",
+            "expected": 7,
+            "errorFeedback": "mediane(5, 7, 9) should give 7"
+        },
+        {
+            "test": "mediane(12, 5, 7)",
+            "expected": 7,
+            "errorFeedback": "mediane(12, 5, 7) should give 7"
+        },
+        {
+            "test": "mediane(5, 3, 4)",
+            "expected": 4,
+            "errorFeedback": "mediane(5, 3, 4) should give 4"
+        },
+        {
+            "test": "mediane(4, 4, 4)",
+            "expected": 4,
+            "errorFeedback": "mediane(5, 3, 4) should give 4"
+        }
+    ]
+}

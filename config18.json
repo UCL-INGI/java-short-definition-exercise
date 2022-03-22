@@ -1,0 +1,27 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "sumFirstEvenIntegers",
+    "tests":[
+        {
+            "test": "sumFirstEvenIntegers(1)",
+            "expected": 0,
+            "errorFeedback": "sumFirstEvenIntegers(1) should give 0"
+        },
+        {
+            "test": "sumFirstEvenIntegers(3)",
+            "expected": 2,
+            "errorFeedback": "sumFirstEvenIntegers(3) should give 2"
+        },
+        {
+            "test": "sumFirstEvenIntegers(5)",
+            "expected": 6,
+            "errorFeedback": "sumFirstEvenIntegers(5) should give 6"
+        },
+        {
+            "test": "sumFirstEvenIntegers(10)",
+            "expected": 30,
+            "errorFeedback": "sumFirstEvenIntegers(10) should give 30"
+        }
+    ]
+}

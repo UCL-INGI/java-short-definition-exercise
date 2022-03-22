@@ -1,0 +1,37 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "inout",
+    "tests":[
+        {
+            "test": "inout(2, 8, 2)",
+            "expected": true,
+            "errorFeedback": "inout(2, 8, 2) should give true"
+        },
+        {
+            "test": "inout(8, 12, 10)",
+            "expected": true,
+            "errorFeedback": "inout(8, 12, 10) should give true"
+        },
+        {
+            "test": "inout(-5, 5, -5)",
+            "expected": true,
+            "errorFeedback": "inout(-5, 5, -5) should give true"
+        },
+        {
+            "test": "inout(-5, 5, 0)",
+            "expected": true,
+            "errorFeedback": "inout(-5, 5, 0) should give true"
+        },
+        {
+            "test": "inout(-8, -2, -12)",
+            "expected": false,
+            "errorFeedback": "inout(-8, -2, -12) should give false"
+        },
+        {
+            "test": "inout(-2, -8, 0)",
+            "expected": false,
+            "errorFeedback": "inout(-2, -8, 0) should give false"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "xor",
+    "tests":[
+        {
+            "test": "xor(true, true)",
+            "expected": false,
+            "errorFeedback": "xor(true, true) should give false"
+        },
+        {
+            "test": "xor(true, false)",
+            "expected": true,
+            "errorFeedback": "xor(true, false) should give true"
+        },
+        {
+            "test": "xor(false, true)",
+            "expected": true,
+            "errorFeedback": "xor(false, true) should give true"
+        },
+        {
+            "test": "xor(false, false)",
+            "expected": false,
+            "errorFeedback": "xor(false, false) should give false"
+        }
+    ]
+}

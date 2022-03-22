@@ -1,0 +1,37 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "car",
+    "tests":[
+        {
+            "test": "car('a')",
+            "expected": "voyelle",
+            "errorFeedback": "'a' est une voyelle"
+        },
+        {
+            "test": "car('o')",
+            "expected": "voyelle",
+            "errorFeedback": "'o' est une voyelle"
+        },
+        {
+            "test": "car('z')",
+            "expected": "consonne",
+            "errorFeedback": "'z' est une consonne"
+        },
+        {
+            "test": "car('s')",
+            "expected": "consonne",
+            "errorFeedback": "'s' est une consonne"
+        },
+        {
+            "test": "car('9')",
+            "expected": "chiffre",
+            "errorFeedback": "'9' est un chiffre"
+        },
+        {
+            "test": "car('3')",
+            "expected": "chiffre",
+            "errorFeedback": "'3' est un chiffre"
+        }
+    ]
+}

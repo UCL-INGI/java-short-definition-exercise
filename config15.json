@@ -1,0 +1,47 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "fizzbuzz",
+    "tests":[
+        {
+            "test": "fizzbuzz(1)",
+            "expected": "non",
+            "errorFeedback": "fizzbuzz(1) should give non"
+        },
+        {
+            "test": "fizzbuzz(3)",
+            "expected": "fizz",
+            "errorFeedback": "fizzbuzz(3) should give fizz"
+        },
+        {
+            "test": "fizzbuzz(5)",
+            "expected": "buzz",
+            "errorFeedback": "fizzbuzz(5) should give buzz"
+        },
+        {
+            "test": "fizzbuzz(15)",
+            "expected": "fizzbuzz",
+            "errorFeedback": "fizzbuzz(15) should give fizzbuzz"
+        },
+        {
+            "test": "fizzbuzz(16)",
+            "expected": "non",
+            "errorFeedback": "fizzbuzz(16) should give non"
+        },
+        {
+            "test": "fizzbuzz(18)",
+            "expected": "fizz",
+            "errorFeedback": "fizzbuzz(18) should give fizz"
+        },
+        {
+            "test": "fizzbuzz(20)",
+            "expected": "buzz",
+            "errorFeedback": "fizzbuzz(20) should give buzz"
+        },
+        {
+            "test": "fizzbuzz(30)",
+            "expected": "fizzbuzz",
+            "errorFeedback": "fizzbuzz(30) should give fizzbuzz"
+        }
+    ]
+}

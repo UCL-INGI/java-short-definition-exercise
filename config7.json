@@ -1,0 +1,67 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "sais",
+    "tests":[
+        {
+            "test": "sais(2, 2)",
+            "expected": "hiver",
+            "errorFeedback": "02/02/2016 should give hiver"
+        },
+        {
+            "test": "sais(16, 5)",
+            "expected": "printemps",
+            "errorFeedback": "16/05/2016 should give printemps"
+        },
+        {
+            "test": "sais(15, 7)",
+            "expected": "été",
+            "errorFeedback": "15/07/2016 should give été"
+        },
+        {
+            "test": "sais(1, 10)",
+            "expected": "automne",
+            "errorFeedback": "01/10/2016 should give automne"
+        },
+        {
+            "test": "sais(20, 3)",
+            "expected": "printemps",
+            "errorFeedback": "20/03/2016 should give printemps"
+        },
+        {
+            "test": "sais(20, 6)",
+            "expected": "été",
+            "errorFeedback": "20/06/2016 should give été"
+        },
+        {
+            "test": "sais(22, 9)",
+            "expected": "automne",
+            "errorFeedback": "22/09/2016 should give automne"
+        },
+        {
+            "test": "sais(21, 12)",
+            "expected": "hiver",
+            "errorFeedback": "21/12/2016 should give hiver"
+        },
+        {
+            "test": "sais(19, 3)",
+            "expected": "hiver",
+            "errorFeedback": "19/03/2016 should give hiver"
+        },
+        {
+            "test": "sais(19, 6)",
+            "expected": "printemps",
+            "errorFeedback": "19/06/2016 should give printemps"
+        },
+        {
+            "test": "sais(21, 9)",
+            "expected": "été",
+            "errorFeedback": "21/09/2016 should give été"
+        },
+        {
+            "test": "sais(20, 12)",
+            "expected": "automne",
+            "errorFeedback": "20/12/2016 should give automne"
+        }
+    ]
+}

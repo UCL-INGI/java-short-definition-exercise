@@ -1,0 +1,27 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "amende",
+    "tests":[
+        {
+            "test": "amende(50, 55)",
+            "expected": 25,
+            "errorFeedback": "amende(50, 55) should give 25"
+        },
+        {
+            "test": "amende(50, 62)",
+            "expected": 120,
+            "errorFeedback": "amende(50, 62) should give 120"
+        },
+        {
+            "test": "amende(50, 50)",
+            "expected": 0,
+            "errorFeedback": "amende(50, 50) should give 0"
+        },
+        {
+            "test": "amende(50, 40)",
+            "expected": 0,
+            "errorFeedback": "amende(50, 40) should give 0"
+        }
+    ]
+}

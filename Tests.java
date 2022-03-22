@@ -10,6 +10,8 @@ import student.Translations.Translator;
 
 import StudentCode.*;
 
+ADDITIONAL_IMPORTS
+
 public class Tests {
 
     @Test

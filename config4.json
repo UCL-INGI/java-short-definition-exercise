@@ -1,6 +1,7 @@
 {
     "askSignature": false,
-    "nameMethod": "quetelet",
+    "askFor": "method",
+    "nameAsk": "quetelet",
     "tests":[
         {
             "test": "quetelet(2, 80)",
@@ -16,6 +17,11 @@
             "test": "quetelet(2, 120)",
             "expected": "embonpoint",
             "errorFeedback": "2m and 120kg should give embonpoint"
+        },
+        {
+            "test": "quetelet(2, 200)",
+            "expected": "obèse",
+            "errorFeedback": "2m and 120kg should give obèse"
         }
     ]
 }

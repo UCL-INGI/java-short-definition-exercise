@@ -1,0 +1,27 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "prix",
+    "tests":[
+        {
+            "test": "prix(3, 5)",
+            "expected": 2.0,
+            "errorFeedback": "prix(3, 5) should give 2.0"
+        },
+        {
+            "test": "prix(3, 6)",
+            "expected": 2.5,
+            "errorFeedback": "prix(3, 6) should give 2.5"
+        },
+        {
+            "test": "prix(2, 2)",
+            "expected": 1.0,
+            "errorFeedback": "prix(2, 2) should give 1.0"
+        },
+        {
+            "test": "prix(9, 9)",
+            "expected": 1.0,
+            "errorFeedback": "prix(9, 9) should give 1.0"
+        }
+    ]
+}

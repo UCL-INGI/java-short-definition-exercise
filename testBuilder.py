@@ -1,22 +1,24 @@
 import json
 
 # Opening JSON file
-f = open('config.json')
+f = open('config19.json')
 
 # returns JSON object as
 # a dictionary
 data = json.load(f)
 
 file = open('Tests.java', 'r+')
-fileEnd = open('Result.java', 'w+')
+fileEnd = open('ResultTest.java', 'w+')
 
-#nbTest = 0
+# nbTest = 0
 for line in file.readlines():
 
-    #dataTest = data["tests"][nbTest]
+    # dataTest = data["tests"][nbTest]
 
     if "CONFIG_TESTS" in line:
-        line = line.replace("CONFIG_TESTS", data["nameMethod"] + "()")
+        # for si plusieurs exos
+        for test in data["tests"]:
+            line = line.replace("CONFIG_TESTS", "tests" + "();")
         """
         tests = ""
         i = 0
@@ -30,8 +32,12 @@ for line in file.readlines():
         line = line.replace("CONFIG_TESTS", tests)
         """
     else:
+        # ne marche pas pour plusieurs exos (boucle qui réécrit CONFIG_method_name ?)
+        # appeller la methode tests?
+
         if "CONFIG_METHOD_NAME" in line:
-            line = line.replace("CONFIG_METHOD_NAME", data["nameMethod"])
+            # écrire public void name(){\n
+            line = line.replace("CONFIG_METHOD_NAME", "tests")
 
         """
         if "CONFIG_TEST_PARAMETERS" in line:
@@ -55,15 +61,19 @@ for line in file.readlines():
             assertions = ""
             for test in data["tests"]:
                 assertions += "assertTrue("
-                assertions += '"' + test["errorFeedback"] + '"' + ", "
+                assertions += "Translator.translate(" + '"' + test["errorFeedback"] + '"' + ")" + ", "
 
-                if test["expected"] is str:
-                    assertions += '"' + test["expected"] + '"' + ", "
+                if isinstance(test["expected"], str):
+                    assertions += '"' + test["expected"] + '"' + ".equals("
                 else:
-                    assertions += str(test["expected"]) + ", "
+                    assertions += str(test["expected"]).lower() + " == "
 
                 assertions += "Etudiant." + test["test"]
-                assertions += ")"
+
+                if isinstance(test["expected"], str):
+                    assertions += ")"
+
+                assertions += ");"
 
                 if i != len(data["tests"]) - 1:
                     assertions += "\n\t\t"
@@ -71,15 +81,16 @@ for line in file.readlines():
                 i += 1
 
             line = line.replace("ASSERTIONS", assertions)
-
+        # }
+        # \n\n TEST_METHOD => si i == len(tests) - 1
     fileEnd.write(line)
     """
     Mieux pour replace ?
-    
+
     import re
     re.sub(pattern, repl, string, count=0, flags=0)
-    
-    
+
+
     ^((-)?\d\.\d)$ -> double
     ^'(\S|\s)'$ -> char
     ^".*"$ -> String

@@ -1,0 +1,36 @@
+{
+    "askSignature": false,
+    "askFor": "class",
+    "nameAsk":"BioInfo",
+    "tests":[
+        {
+            "test": "isADN(\"\")",
+            "expected": true,
+            "errorFeedback": "isADN(\"\") should give false"
+        },
+        {
+            "test": "isADN(\"Z\")",
+            "expected": false,
+            "errorFeedback": "isADN(\"Z\") should give false"
+        },
+        {
+            "test": "isADN(\"AT\")",
+            "expected": true,
+            "errorFeedback": "isADN(\"AT\") should give true"
+        },
+        {
+            "test": "testIsADN()"
+        },
+        {
+            "test": "count(\"AT\", 'A')",
+            "expected": 1,
+            "errorFeedback": "isADN(\"AT\") should give true"
+        }
+        ,
+        {
+            "test": "count(\"TCT\", 'A')",
+            "expected": 0,
+            "errorFeedback": "isADN(\"AT\") should give true"
+        }
+    ]
+}

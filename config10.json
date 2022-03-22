@@ -1,0 +1,32 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "diff",
+    "tests":[
+        {
+            "test": "diff(1, 2, 3)",
+            "expected": 3,
+            "errorFeedback": "With 1, 2, 3, diff should give 3"
+        },
+        {
+            "test": "diff(5, 5, 9)",
+            "expected": 2,
+            "errorFeedback": "With 5, 5 and 9, diff should give 2"
+        },
+        {
+            "test": "diff(2, 3, 3)",
+            "expected": 2,
+            "errorFeedback": "With 2, 3 and 3, diff should give 2"
+        },
+        {
+            "test": "diff(6, 6, 6)",
+            "expected": 1,
+            "errorFeedback": "With 6, 6 and 6, diff should give 1"
+        },
+        {
+            "test": "diff(0, 1, 0)",
+            "expected": 2,
+            "errorFeedback": "With 0, 1 and 0, diff should give 2"
+        }
+    ]
+}

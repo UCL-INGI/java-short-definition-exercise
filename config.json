@@ -1,6 +1,7 @@
 {
     "askSignature": false,
-    "nameMethod": "average",
+    "askFor": "method",
+    "nameAsk": "average",
     "tests":[
         {
             "test": "average(1.0,2.0,3.0)",

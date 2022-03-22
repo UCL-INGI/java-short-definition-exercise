@@ -1,0 +1,72 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "abs",
+    "tests":[
+        {
+            "test": "abs(-0.1)",
+            "expected": 0.1,
+            "errorFeedback": "abs(-0.1) should give 0.1"
+        },
+        {
+            "test": "abs(0.0)",
+            "expected": 0.0,
+            "errorFeedback": "abs(0.0) should give 0.0"
+        },
+        {
+            "test": "abs(0.5)",
+            "expected": 0.5,
+            "errorFeedback": "abs(0.5) should give 0.5"
+        },
+        {
+            "test": "ceil(-0.1)",
+            "expected": 0.0,
+            "errorFeedback": "ceil(-0.1) should give 0.0"
+        },
+        {
+            "test": "ceil(0.0)",
+            "expected": 0,
+            "errorFeedback": "ceil(0.0) should give 0.0"
+        },
+        {
+            "test": "ceil(0.5)",
+            "expected": 1.0,
+            "errorFeedback": "ceil(0.5) should give 1.0"
+        },
+        {
+            "test": "round(-0.1)",
+            "expected": 0.0,
+            "errorFeedback": "ceil(-0.1) should give 0.0"
+        },
+        {
+            "test": "round(0.0)",
+            "expected": 0,
+            "errorFeedback": "round(0.0) should give 0.0"
+        },
+        {
+            "test": "round(0.5)",
+            "expected": 1.0,
+            "errorFeedback": "round(0.5) should give 1.0"
+        },
+        {
+            "test": "round(1.2)",
+            "expected": 1.0,
+            "errorFeedback": "round(1.2) should give 2.0"
+        },
+        {
+            "test": "floor(-0.1)",
+            "expected": -1.0,
+            "errorFeedback": "floor(-0.1) should give -1.0"
+        },
+        {
+            "test": "floor(0.0)",
+            "expected": 0.0,
+            "errorFeedback": "floor(0.0) should give 0.0"
+        },
+        {
+            "test": "floor(1.2)",
+            "expected": 1.0,
+            "errorFeedback": "floor(1.2) should give 1.0"
+        }
+    ]
+}

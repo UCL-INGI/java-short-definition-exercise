@@ -1,0 +1,32 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "max",
+    "tests":[
+        {
+            "test": "max(5, 10, 15)",
+            "expected": 15,
+            "errorFeedback": "With 5, 10, and 15, max should give 15"
+        },
+        {
+            "test": "max(0, 15, -10)",
+            "expected": 15,
+            "errorFeedback": "With 0, 15 and -10, max should give 15"
+        },
+        {
+            "test": "max(-5, -10, -15)",
+            "expected": -5,
+            "errorFeedback": "With -5, -10, and -15, max should give -5"
+        },
+        {
+            "test": "max(-1, 0, 1)",
+            "expected": 1,
+            "errorFeedback": "With -1, 0, and 1, max should give 1"
+        },
+        {
+            "test": "max(3, 2, 1)",
+            "expected": 3,
+            "errorFeedback": "With 3, 2, and 1, max should give 3"
+        }
+    ]
+}
