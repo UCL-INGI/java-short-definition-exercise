@@ -1,0 +1,11 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "tests":[
+        {
+            "test": "unite(3)",
+            "expected": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+            "errorFeedback": "isADN(\"\") should give false"
+        }
+    ]
+}

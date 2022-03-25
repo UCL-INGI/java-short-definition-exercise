@@ -2,6 +2,7 @@
     "askSignature": false,
     "askFor": "class",
     "nameAsk":"BioInfo",
+    "constructorWithParameters": false,
     "tests":[
         {
             "test": "isADN(\"\")",

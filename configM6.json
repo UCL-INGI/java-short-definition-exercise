@@ -1,0 +1,45 @@
+{
+    "askSignature": false,
+    "askFor": "class",
+    "nameAsk":"Employe",
+    "constructorWithParameters": true,
+    "tests":[
+        {
+            "test": "getNom()",
+            "constructorParameters": ["Anatole", 1500],
+            "expected": "Anatole",
+            "errorFeedback": "getNom() with Employe(\"Anatole\", 1500) should give \"Anatole\""
+        },
+        {
+            "test": "getNom()",
+            "constructorParameters": ["Employe1", 1000],
+            "expected": "Employe1",
+            "errorFeedback": "getNom() with Employe(\"Employe1\", 1000) should give \"Employe1\""
+        },
+        {
+            "test": "getSalaire()",
+            "constructorParameters": ["Anatole", 1500],
+            "expected": 1500,
+            "errorFeedback": "getSalaire() with Employe(\"Anatole\", 1500) should give 1500"
+        },
+        {
+            "test": "toString()",
+            "constructorParameters": ["Anatole", 1500],
+            "expected": "Anatole : 1500.0",
+            "errorFeedback": "toString() with Employe(\"Anatole\", 1500) should give \"Anatole : 1500\""
+        },
+        {
+            "test": "toString()",
+            "constructorParameters": ["Employe1", 1000],
+            "expected": "Employe1 : 1000.0",
+            "errorFeedback": "toString() with Employe(\"Employe1\", 1000) should give \"Employe1 : 1000\""
+        },
+        {
+            "previousCalls": "augmente(10.0)",
+            "test": "getSalaire()",
+            "constructorParameters": ["Employe1", 1000],
+            "expected": 1100,
+            "errorFeedback": "augemente(10) with Employe(\"Employe1\", 1000) should give 1100"
+        }
+    ]
+}

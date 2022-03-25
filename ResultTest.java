@@ -10,6 +10,7 @@ import student.Translations.Translator;
 
 import StudentCode.*;
 
+import java.lang.reflect.*;
 
 
 public class Tests {
@@ -21,10 +22,20 @@ public class Tests {
 
     // CONFIG_TEST_PARAMETERS
     public void tests(){
-        assertTrue(Translator.translate("isADN(\"\") should give false"), false == Etudiant.egal(new double[] {0.1, 0.2}, new double[] {0.4, 0.5}));
-		assertTrue(Translator.translate("isADN(\"\") should give false"), true == Etudiant.egal(new double[] {0.1, 0.2}, new double[] {0.1, 0.2}));
-		assertTrue(Translator.translate("isADN(\"\") should give false"), false == Etudiant.egal(new double[] {0.4, 0.2}, new double[] {0.4, 0.5}));
-		assertTrue(Translator.translate("isADN(\"\") should give false"), false == Etudiant.egal(new double[] {0.2, 0.5}, new double[] {0.4, 0.5}));
+        Temps tempsStudent = new Temps(23, 59, 59);
+		Method getHeureStud = null;
+
+		try {
+			getHeureStud = Temps.class.getDeclaredMethod("getHeure");
+		} catch (NoSuchMethodException e){
+			fail("il vous faut une méthode getHeure");
+		}
+
+		assertTrue(Translator.translate("getHeure() with Temps(23, 59, 59) should give 23"), 23 == tempsStudent.getHeure());
+		
+		employeStudent = new Employe(0, 0, 0);
+		assertTrue(Translator.translate("getHeure() with Temps(0, 0, 0) should give 0"), 0 == tempsStudent.getHeure());
+		
     }
 
 }

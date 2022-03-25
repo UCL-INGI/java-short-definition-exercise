@@ -1,0 +1,22 @@
+{
+    "askSignature": false,
+    "askFor": "class",
+    "nameAsk":"Employe",
+    "constructorWithParameters": true,
+    "tests":[
+        {
+            "test": "getHeure()",
+            "classToCall": "Temps",
+            "constructorParameters": [23, 59, 59],
+            "expected": 23,
+            "errorFeedback": "getHeure() with Temps(23, 59, 59) should give 23"
+        },
+        {
+            "test": "getHeure()",
+            "classToCall": "Temps",
+            "constructorParameters": [0, 0, 0],
+            "expected": 0,
+            "errorFeedback": "getHeure() with Temps(0, 0, 0) should give 0"
+        }
+    ]
+}
