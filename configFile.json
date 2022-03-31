@@ -1,0 +1,18 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "askName": "countLines",
+    "filesInExercise": true,
+    "tests":[
+        {
+            "test": "countLines(\"./file1\")",
+            "expected": 79,
+            "errorFeedback": "Il y avait 79 lignes dans le fichier test.txt"
+        },
+        {
+            "test": "countLines(\"./fakeFile\")",
+            "shouldFail": true,
+            "errorFeedback": "Il fallait catch une IOException"
+        }
+    ]
+}

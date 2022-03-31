@@ -1,0 +1,2 @@
+ //if !br.lines().anyMatch(s -> s.trim().contains("BufferedReader"))) { fail }
+ //if !br.lines().anyMatch(s -> s.trim().contains("close")));

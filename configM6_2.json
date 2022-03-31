@@ -1,22 +1,36 @@
 {
     "askSignature": false,
     "askFor": "class",
-    "nameAsk":"Employe",
     "constructorWithParameters": true,
     "tests":[
         {
-            "test": "getHeure()",
+            "test": "getH()",
             "classToCall": "Temps",
             "constructorParameters": [23, 59, 59],
             "expected": 23,
-            "errorFeedback": "getHeure() with Temps(23, 59, 59) should give 23"
+            "errorFeedback": "getH() with Temps(23, 59, 59) should give 23"
         },
         {
-            "test": "getHeure()",
+            "previousCalls": "ajouter(new Temps(10, 20, 12))",
+            "test": "toString()",
             "classToCall": "Temps",
-            "constructorParameters": [0, 0, 0],
-            "expected": 0,
-            "errorFeedback": "getHeure() with Temps(0, 0, 0) should give 0"
+            "constructorParameters": [23, 59, 59],
+            "expected": "10:20:11",
+            "errorFeedback": "ajouter(Temps(10, 20, 12)) with Temps(23, 59, 59) should give \"10:20:11\""
+        },
+        {
+            "test": "apres(new Temps(10, 2, 0))",
+            "classToCall": "Temps",
+            "constructorParameters": [23, 59, 59],
+            "expected": true,
+            "errorFeedback": "apres(new Temps(10, 2, 0)) with Temps(23, 59, 59) should give true"
+        },
+        {
+            "test": "getTitre()",
+            "classToCall": "Chanson",
+            "constructorParameters": ["Titre1", "Anonyme", "new Temps(0,3,20)"],
+            "expected": "Titre1",
+            "errorFeedback": "getTitre() with Chanson(\"Titre1\", \"Anonyme\", \"new Temps(0,3, 20)\") should give Titre1"
         }
     ]
 }

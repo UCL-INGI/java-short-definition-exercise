@@ -1,0 +1,17 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "oppose",
+    "tests":[
+        {
+            "test": "oppose([1, 2, 3])",
+            "expected": [-1, -2, -3],
+            "errorFeedback": "mauvais resultat"
+        },
+        {
+            "test": "oppose([-3, -4, -5])",
+            "expected": [3, 4, 5],
+            "errorFeedback": "mauvais resultat"
+        }
+    ]
+}

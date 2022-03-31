@@ -1,15 +1,12 @@
 import json, re
 
-# ATTENTION : M5_2 a des doubles [], faut voir comment faire
-
-# check avec class -> M6 Temps a besoin de parametre (h, m, s) => impossible de les donner
-# check avec file (M6dem4)
-# check avec mocks (M6dem1)
-# check avec structures (M11)
-# check avec new en param (m6dem1 / M9Q2)
+# TODO : check si execption bien lancé + Mock ?
+# check avec file (M6dem4 ? / M9Q3) -> exersise with files => true / false + si true -> try catch IOException
+# check avec mocks (M6dem1) -> OK ? Exo pas assez poussé ?
+# check output console ? (m5dem5 / m5Q8 / m5Q9 / M05Q12)
 
 # Opening JSON file
-f = open('configM6.json')
+f = open('configM5Output.json')
 
 # returns JSON object as
 # a dictionary
@@ -29,10 +26,12 @@ for line in file.readlines():
                 additional_imports += "import java.util.Arrays;\n"
         if data["askFor"] == "class":
             additional_imports += "import java.lang.reflect.*;\n"
+        if "filesInExercise" in data and data["filesInExercise"]:
+            additional_imports += "import java.io.*;\n"
 
         line = line.replace("ADDITIONAL_IMPORTS", additional_imports)
     if "CONFIG_TESTS" in line:
-        # for si plusieurs exos
+        # for si plusieurs exos ?
         line = line.replace("CONFIG_TESTS", "tests();")
         """
         tests = ""
@@ -47,55 +46,81 @@ for line in file.readlines():
         line = line.replace("CONFIG_TESTS", tests)
         """
     else:
-        # ne marche pas pour plusieurs exos (boucle qui réécrit CONFIG_method_name ?)
-        # appeller la methode tests?
-
         if "CONFIG_METHOD_NAME" in line:
-            # écrire public void name(){\n
+            # for di plusieurs exos ?
             line = line.replace("CONFIG_METHOD_NAME", "tests")
 
-        """
-        if "CONFIG_TEST_PARAMETERS" in line:
-            nameTest = test["test"]
-            parameters = nameTest[nameTest.find("(") + 1 : len(nameTest) - 1].split(",")
-
-            parametersLine = ""
-            nameParameter = 'a'
-            for i in range(len(parameters)):
-                if re.match("^((-)?\d\.\d)$", parameters[i]):
-                    parametersLine += "double " + nameParameter
-                    if i != len(parameters) - 1:
-                        parametersLine += ", "
-                nameParameter = chr(ord(nameParameter) + 1)
-                # check le type + changer en double a, double b, ...
-
-            line = line.replace("CONFIG_TEST_PARAMETERS", parametersLine)
-        """
-        if "ASSERTIONS" in line:
+        elif "ASSERTIONS" in line:
             i = 0
+            iClass = 0
             assertions = ""
             distinctTests = []
 
             if data["askFor"] == "class":
-                assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
-                    "nameAsk"] + "();\n\t\t"
+                if not data["constructorWithParameters"]:
+                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
+                        "nameAsk"] + "();\n\t\t"
+
+            if data["askFor"] == "method":
+                if not data["constructorWithParameters"] and "nameAsk" in data:
+                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data[
+                        "nameAsk"] + "();\n\t\t"
 
             for test in data["tests"]:
                 nameTest = test["test"].split("(")[0]
+
+                if "constructorParameters" in test:
+                    if test["classToCall"] in assertions:
+                        assertions += test["classToCall"].lower() + "Student = new " + test["classToCall"] + "("
+                    elif "classToCall" in test:
+                        assertions += test["classToCall"] + " " + test["classToCall"].lower() + "Student = new " + test[
+                            "classToCall"] + "("
+                    elif data["nameAsk"] in assertions:
+                        assertions += data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "("
+                    else:
+                        assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
+                            "nameAsk"] + "("
+
+                    parametersList = str(test["constructorParameters"])[1:-1].split(", ")
+                    iParameter = 0
+                    print(parametersList)
+                    for parameter in parametersList:
+                        print(parameter)
+                        if parameter[1:].startswith("new "):
+                            assertions += str(parameter)[1:-1]
+                        else:
+                            assertions += str(parameter).replace("'", "\"")
+
+                        if iParameter != len(parametersList) - 1:
+                            assertions += ", "
+
+                        iParameter += 1
+
+                    # assertions += str(str(test["constructorParameters"])[1:-1]).replace("'", "\"")
+                    assertions += ");\n\t\t"
+
                 if data["askFor"] == "class" and nameTest not in distinctTests:
                     distinctTests.append(nameTest)
 
                     if i != 0:
                         assertions += "\n\t\t"
 
-                    # retirer check du i et faire tableau qui garde le nom du test + si pas le nom du test add Metthod etc...
                     parameterValue = test["test"].split("(")[1].split(")")[0]
                     parameterType = ""
                     if re.match("^\".*\"$", parameterValue):
                         parameterType = "String"
+                    elif re.match("^\d+$", parameterValue):
+                        parameterType = "int"
+                    elif re.match("^new [A-Z]{1}.*$", parameterValue):
+                        parameterType = str(parameterValue).split("new ")[1].split("(")[0]
                     assertions += "Method " + nameTest + "Stud = null;\n\n\t\t"
                     assertions += "try {\n\t\t\t"
-                    assertions += nameTest + "Stud = " + data["nameAsk"] + ".class.getDeclaredMethod("
+
+                    if "classToCall" in test:
+                        assertions += nameTest + "Stud = " + test["classToCall"] + ".class.getDeclaredMethod("
+                    else:
+                        assertions += nameTest + "Stud = " + data["nameAsk"] + ".class.getDeclaredMethod("
+
                     assertions += '"' + nameTest + '"'
 
                     if parameterValue != "":
@@ -105,64 +130,119 @@ for line in file.readlines():
                     assertions += "} catch (NoSuchMethodException e){\n\t\t\t"
                     assertions += "fail(" + '"' + "il vous faut une méthode " + nameTest + '"' + ");\n\t\t"
                     assertions += "}\n\n\t\t"
+
                 if test["test"].startswith("test"):
                     assertions += "try {\n\t\t\t"
                     assertions += data["nameAsk"].lower() + "Student." + test["test"] + ";\n\t\t"
                     assertions += "} catch (AssertionError e){\n\t\t\t"
                     assertions += "fail(" + '"' + "vos tests pour " + nameTest + " ne passent pas" + '"' + ");\n\t\t"
                     assertions += "}\n\n\t\t"
-                if not test["test"].startswith("test"):
-                    assertions += "assertTrue("
-                    assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"",
-                                                                                                "\\\"") + '"' + ")" + ", "
 
-                    if isinstance(test["expected"], list):
+                if not test["test"].startswith("test"):
+                    nomClasse = "Etudiant"
+
+                    if data["askFor"] == "class" and "classToCall" in test:
+                        nomClasse = test["classToCall"].lower() + "Student"
+
+                    elif "nameAsk" in data and data["nameAsk"] != "":
+                        nomClasse = data["nameAsk"].lower() + "Student"
+
+                    if "previousCalls" in test:
+                        assertions += nomClasse + "." + test["previousCalls"] + ";\n\t\t"
+
+                    if "shouldFail" in test and test["shouldFail"]:
+                        assertions += "try {\n\t\t\t"
+
+                    if "shouldFail" not in test:
+                        assertions += "assertTrue("
+                        assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"",
+                                                                                                    "\\\"") + '"' + ")" + ", "
+
+                    """
+                    # marche pas ?
+                    if data["askFor"] == "class" and data["constructorWithParameters"] and "expected" not in test:
+                        print(iClass)
+                        if isinstance(data["constructorParameters"][iClass][0], str):
+                            assertions += '"' + str(data["constructorParameters"][iClass][0]) + '"' +".equals("
+
+                        if iClass < len(data["constructorParameters"]) - 1:
+                            iClass += 1
+                        else:
+                            iClass = 0
+                        #assertions += str(data["constructorParameters"][iClass][0])
+                    """
+
+                    if "expected" in test and isinstance(test["expected"], list):
                         strExpected = str(test["expected"])
                         parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
                         # parameters = str(test["expected"]).split("[")[1].split("]")[0].split(",")
                         print(parameters)
                         parameterType = ""
                         # suppose que tous ont le même type
-                        if re.match("^\[\d+$", parameters[0]):
+                        if re.match("^\[-?\d+$", parameters[0]):
                             parameterType = "int[]"
-                            print(parameterType)
+                        elif re.match("^-?\d+$", parameters[0]):
+                            parameterType = "int"
 
                         line2 = str(test["expected"]).replace("]", "}")
                         line2 = line2.replace("[", "new int" + "[] {")
                         line2 = "new " + parameterType + "[] " + str(line2)[9:]
                         print(line2)
-                        assertions += "Arrays.deepEquals(" + str(line2) + ", "
-                    elif isinstance(test["expected"], str):
+
+                        if parameterType == "int":
+                            assertions += "Arrays.equals(" + str(line2) + ", "
+                        else:
+                            assertions += "Arrays.deepEquals(" + str(line2) + ", "
+                    elif "expected" in test and str(test["expected"]).startswith("new"):
+                        assertions += test["expected"] + ".equals("
+                    elif "expected" in test and isinstance(test["expected"], str):
                         assertions += '"' + test["expected"] + '"' + ".equals("
-                    else:
+                    elif "expected" in test:
                         assertions += str(test["expected"]).lower() + " == "
-
-                    nomClasse = "Etudiant"
-
-                    if data["askFor"] == "class" and data["nameAsk"] != "":
-                        nomClasse = data["nameAsk"].lower() + "Student"
 
                     assertions += nomClasse + "."
 
                     # déterminer type de tableau si passer en param (cf. M5_1)
                     if "[" in test["test"]:
-                        parameters = test["test"].split("[")[1].split("]")[0].split(",")
-
+                        strExpected = str(test["test"])
+                        parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
+                        print(parameters)
                         parameterType = ""
                         # suppose que tous ont le même type
                         if re.match("^((-)?\d\.\d)$", parameters[0]):
                             parameterType = "double"
-
+                        elif re.match("^-?\d$", parameters[0]):
+                            parameterType = "int"
+                        elif re.match("^\[\d+$", parameters[0]):
+                            parameterType = "int[]"
+                        print(test["test"])
                         line2 = test["test"].replace("]", "}")
                         line2 = line2.replace("[", "new " + parameterType + "[] {")
+                        line2 = line2.replace("{new " + parameterType + "[]", "{ new " + parameterType)
                         assertions += line2
                     else:
                         assertions += test["test"]
 
-                    if isinstance(test["expected"], str) or isinstance(test["expected"], list):
+                    if "expected" in test and (isinstance(test["expected"], str) or isinstance(test["expected"], list)):
                         assertions += ")"
 
-                    assertions += ");"
+                    if "shouldFail" not in test:
+                        assertions += ")"
+
+                    assertions += ";\n\t\t"
+
+                    if "shouldFail" in test:
+                        assertions += "\t"
+                        assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
+
+                    if "shouldFail" in test and test["shouldFail"]:
+                        assertions += "} catch(Exception e){\n\t\t"
+
+                        if "shouldFail" not in test:
+                            assertions += "\t"
+                            assertions += "fail(" + '"' + '"' + ");\n\t\t"
+
+                        assertions += "}\n"
 
                     if i != len(data["tests"]) - 1:
                         assertions += "\n\t\t"
@@ -186,7 +266,7 @@ for line in file.readlines():
     ^\d+$ -> int
     ^(true|false)$ -> boolean
     if new ???() -> type = ??? (split entre " " et '(')
-    if pas de new & CAPS + lettres => type = List
+    if pas de new & CAPS + lettres => type = List ou import in imports
     if ?[] => ?[]
     """
 # Closing file

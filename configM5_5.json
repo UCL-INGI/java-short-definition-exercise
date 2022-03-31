@@ -1,0 +1,17 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "mean",
+    "tests":[
+        {
+            "test": "mean([1.0, 2.0, 3.0])",
+            "expected": 2.0,
+            "errorFeedback": "mauvais resultat"
+        },
+        {
+            "test": "mean([-3.0, -4.0, -5.0])",
+            "expected": -4.0,
+            "errorFeedback": "mauvais resultat"
+        }
+    ]
+}

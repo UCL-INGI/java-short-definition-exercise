@@ -1,0 +1,34 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "PileInt",
+    "tests":[
+        {
+            "previousCalls": "push(1)",
+            "test": "depth()",
+            "expected": 1,
+            "errorFeedback": "depth() should give 1"
+        },
+        {
+            "previousCalls": "push(3)",
+            "test": "depth()",
+            "expected": 2,
+            "errorFeedback": "depth() should give 2"
+        },
+        {
+            "test": "pop()",
+            "expected": 3,
+            "errorFeedback": "pop() should give 3"
+        },
+        {
+            "test": "pop()",
+            "expected": 1,
+            "errorFeedback": "pop() should give 1"
+        },
+        {
+            "test": "pop()",
+            "shouldFail": true,
+            "errorFeedback": "pop on empty"
+        }
+    ]
+}

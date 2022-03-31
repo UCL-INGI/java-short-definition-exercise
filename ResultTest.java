@@ -9,32 +9,52 @@ import java.text.MessageFormat;
 import student.Translations.Translator;
 
 import StudentCode.*;
+import student.*;
 
-import java.lang.reflect.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 
 public class Tests {
 
     @Test
     public void testLauncher(){
+        // tests() pour l'instant
         tests();
     }
 
     // CONFIG_TEST_PARAMETERS
+    // tests() pour l'instant  = tests
     public void tests(){
-        Temps tempsStudent = new Temps(23, 59, 59);
-		Method getHeureStud = null;
-
-		try {
-			getHeureStud = Temps.class.getDeclaredMethod("getHeure");
-		} catch (NoSuchMethodException e){
-			fail("il vous faut une méthode getHeure");
-		}
-
-		assertTrue(Translator.translate("getHeure() with Temps(23, 59, 59) should give 23"), 23 == tempsStudent.getHeure());
+        Etudiant etudiant = new Etudiant();
+		ByteArrayOutputStream baos;
+		PrintStream ps;
+		PrintStream old = System.out;
+		String rep_student;
 		
-		employeStudent = new Employe(0, 0, 0);
-		assertTrue(Translator.translate("getHeure() with Temps(0, 0, 0) should give 0"), 0 == tempsStudent.getHeure());
+		baos = new ByteArrayOutputStream();
+		ps = new PrintStream(baos);
+		System.setOut(ps);
+		Etudiant.main_1(new String[] {"Un"});
+		System.out.flush();
+		rep_student = baos.toString();
+		assertTrue(Translator.translate("main_1() should give 1"), "Un\n".equals(rep_student));
+		
+		baos = new ByteArrayOutputStream();
+		ps = new PrintStream(baos);
+		System.setOut(ps);
+		Etudiant.main_1(new String[] {"Un","Deux"});
+		System.out.flush();
+		rep_student = baos.toString();
+		assertTrue(Translator.translate("main_1() should give 1"), "Un\nDeux\n".equals(rep_student));
+		
+		baos = new ByteArrayOutputStream();
+		ps = new PrintStream(baos);
+		System.setOut(ps);
+		Etudiant.main_2(new String[] {"1","2"});
+		System.out.flush();
+		rep_student = baos.toString();
+		assertTrue(Translator.translate("main_1() should give 3"), "3".equals(rep_student));
 		
     }
 

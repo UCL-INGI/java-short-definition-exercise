@@ -1,0 +1,71 @@
+{
+    "askSignature": false,
+    "askFor": "class",
+    "nameAsk":"Stack",
+    "constructorWithParameters": false,
+    "tests":[
+        {
+            "test": "size()",
+            "classToCall": "Stack",
+            "expected": 0,
+            "errorFeedback": "size() should give 0"
+        },
+        {
+            "test": "isEmpty()",
+            "classToCall": "Stack",
+            "expected": true,
+            "errorFeedback": "isEmpty() should give true"
+        },
+        {
+            "previousCalls": "push(new State(10, -2, 113))",
+            "classToCall": "Stack",
+            "test": "size()",
+            "expected": 1,
+            "errorFeedback": "size() should give 1"
+        },
+        {
+            "previousCalls": "push(new State(1, 2, 3))",
+            "classToCall": "Stack",
+            "test": "size()",
+            "expected": 2,
+            "errorFeedback": "size() should give 2"
+        },
+        {
+            "previousCalls": "push(new State(11, 21.5, 13))",
+            "classToCall": "Stack",
+            "test": "size()",
+            "expected": 3,
+            "errorFeedback": "size() should give 3"
+        },
+        {
+            "classToCall": "Stack",
+            "test": "peek(1)",
+            "expected": "new State(1,2,3)",
+            "errorFeedback": "peek(1) should give State(1, 2, 3)"
+        },
+        {
+            "classToCall": "Stack",
+            "test": "pop()",
+            "expected": "new State(11,21.5,13)",
+            "errorFeedback": "pop() should give State(11, 21.5, 13)"
+        },
+        {
+            "classToCall": "Stack",
+            "test": "pop()",
+            "expected": "new State(1,2,3)",
+            "errorFeedback": "pop() should give State(1,2,3)"
+        },
+        {
+            "classToCall": "Stack",
+            "test": "pop()",
+            "expected": "new State(10,-2,113)",
+            "errorFeedback": "pop() should give State(10,-2,113)"
+        },
+        {
+            "classToCall": "Stack",
+            "test": "pop()",
+            "shouldFail": true,
+            "errorFeedback": "pop sur une Stack vide. Il fallait lancer une EmptyStackException."
+        }
+    ]
+}
