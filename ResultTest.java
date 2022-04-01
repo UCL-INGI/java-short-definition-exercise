@@ -11,8 +11,6 @@ import student.Translations.Translator;
 import StudentCode.*;
 import student.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 
 public class Tests {
@@ -26,36 +24,24 @@ public class Tests {
     // CONFIG_TEST_PARAMETERS
     // tests() pour l'instant  = tests
     public void tests(){
-        Etudiant etudiant = new Etudiant();
-		ByteArrayOutputStream baos;
-		PrintStream ps;
-		PrintStream old = System.out;
-		String rep_student;
+        PileInt pileint = new PileInt();
+		pileint.push(1);
+		assertTrue(Translator.translate("depth() should give 1"), 1 == pileint.depth());
 		
-		baos = new ByteArrayOutputStream();
-		ps = new PrintStream(baos);
-		System.setOut(ps);
-		Etudiant.main_1(new String[] {"Un"});
-		System.out.flush();
-		rep_student = baos.toString();
-		assertTrue(Translator.translate("main_1() should give 1"), "Un\n".equals(rep_student));
+		pileint.push(3);
+		assertTrue(Translator.translate("depth() should give 2"), 2 == pileint.depth());
 		
-		baos = new ByteArrayOutputStream();
-		ps = new PrintStream(baos);
-		System.setOut(ps);
-		Etudiant.main_1(new String[] {"Un","Deux"});
-		System.out.flush();
-		rep_student = baos.toString();
-		assertTrue(Translator.translate("main_1() should give 1"), "Un\nDeux\n".equals(rep_student));
+		assertTrue(Translator.translate("pop() should give 3"), 3 == pileint.pop());
 		
-		baos = new ByteArrayOutputStream();
-		ps = new PrintStream(baos);
-		System.setOut(ps);
-		Etudiant.main_2(new String[] {"1","2"});
-		System.out.flush();
-		rep_student = baos.toString();
-		assertTrue(Translator.translate("main_1() should give 3"), "3".equals(rep_student));
+		assertTrue(Translator.translate("pop() should give 1"), 1 == pileint.pop());
 		
+		try {
+			pileint.pop();
+			fail("pop on empty");
+		} catch(IllegalStateException e){
+		} catch(Exception e){
+			fail("pop on empty");
+		}
     }
 
 }

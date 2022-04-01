@@ -1,11 +1,10 @@
 import json, re
 
-# TODO : check si execption bien lancé + Mock ?
-# check avec file (M6dem4 ? / M9Q3) -> exersise with files => true / false + si true -> try catch IOException
+# check avec file (M6dem4 ? / M9Q3) ->
 # check avec mocks (M6dem1) -> OK ? Exo pas assez poussé ?
 
 # Opening JSON file
-f = open('configM5Output.json')
+f = open('configM11Q1.json')
 
 # returns JSON object as
 # a dictionary
@@ -59,12 +58,22 @@ for line in file.readlines():
             assertions = ""
             distinctTests = []
 
+            if "filesInExercise" in data and data["filesInExercise"]:
+                assertions += "BufferedReader br = null;\n\t\t"
+                assertions += "try{\n\t\t\t"
+                assertions += "br = new BufferedReader(new FileReader(new File(\"./StudentCode/Etudiant.class\")));\n\t\t"
+                assertions += "} catch (Exception e){\n\t\t\t"
+                assertions += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
+                assertions += "}\n\n\t\t"
+                assertions += "if (!br.lines().anyMatch(s -> s.trim().contains(\"BufferedReader\"))) { fail(\"BufferedReader expected\"); }\n\t\t"
+                assertions += "if (!br.lines().anyMatch(s -> s.trim().contains(\"close\"))) { fail(\"close() expected\"); }\n\n\t\t"
+
             if data["askFor"] == "class":
                 if not data["constructorWithParameters"]:
                     assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "();\n\t\t"
 
             if data["askFor"] == "method":
-                if not data["constructorWithParameters"] and "nameAsk" in data:
+                if "nameAsk" in data:
                     assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data["nameAsk"] + "();\n\t\t"
                 elif "nameAsk" not in data:
                     assertions += "Etudiant etudiant = new Etudiant();\n\t\t"
@@ -92,9 +101,8 @@ for line in file.readlines():
 
                     parametersList = str(test["constructorParameters"])[1:-1].split(", ")
                     iParameter = 0
-                    print(parametersList)
+
                     for parameter in parametersList:
-                        print(parameter)
                         if parameter[1:].startswith("new "):
                             assertions += str(parameter)[1:-1]
                         else:
@@ -113,8 +121,6 @@ for line in file.readlines():
 
                     if i != 0:
                         assertions += "\n\t\t"
-
-
 
                     parameterValue = test["test"].split("(")[1].split(")")[0]
                     parameterType = ""
@@ -153,15 +159,15 @@ for line in file.readlines():
                     nomClasse = "Etudiant"
 
                     if data["askFor"] == "class" and "classToCall" in test:
-                        nomClasse = test["classToCall"].lower() + "Student"
+                        nomClasse = test["classToCall"].lower()
 
                     elif "nameAsk" in data and data["nameAsk"] != "":
-                        nomClasse = data["nameAsk"].lower() + "Student"
+                        nomClasse = data["nameAsk"].lower()
 
                     if "previousCalls" in test:
                         assertions += nomClasse + "." + test["previousCalls"] + ";\n\t\t"
 
-                    if "shouldFail" in test and test["shouldFail"]:
+                    if "filesInExercise" in data and data["filesInExercise"]:
                         assertions += "try {\n\t\t\t"
 
                     if "checkConsole" in test and test["checkConsole"]:
@@ -172,10 +178,11 @@ for line in file.readlines():
                         assertions += "System.out.flush();\n\t\t"
                         assertions += "rep_student = baos.toString();\n\t\t"
 
-                    if "shouldFail" not in test:
+                    if "exceptionExpected" not in test:
                         assertions += "assertTrue("
                         assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"", "\\\"") + '"' + ")" + ", "
-
+                    else:
+                        assertions += "try {\n\t\t\t"
                     """
                     # marche pas ?
                     if data["askFor"] == "class" and data["constructorWithParameters"] and "expected" not in test:
@@ -194,7 +201,6 @@ for line in file.readlines():
                         strExpected = str(test["expected"])
                         parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
                         #parameters = str(test["expected"]).split("[")[1].split("]")[0].split(",")
-                        print(parameters)
                         parameterType = ""
                         # suppose que tous ont le même type
                         if re.match("^\[-?\d+$", parameters[0]):
@@ -205,7 +211,6 @@ for line in file.readlines():
                         line2 = str(test["expected"]).replace("]", "}")
                         line2 = line2.replace("[", "new int" + "[] {")
                         line2 = "new " + parameterType + "[] " + str(line2)[9:]
-                        print(line2)
 
                         if parameterType == "int":
                             assertions += "Arrays.equals(" + str(line2) + ", "
@@ -227,7 +232,6 @@ for line in file.readlines():
                     if "rep_student" not in assertions and "[" in test["test"]:
                         strExpected = str(test["test"])
                         parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                        print(parameters)
                         parameterType = ""
                         # suppose que tous ont le même type
                         if re.match("^((-)?\d\.\d)$", parameters[0]):
@@ -236,7 +240,6 @@ for line in file.readlines():
                             parameterType = "int"
                         elif re.match("^\[\d+$", parameters[0]):
                             parameterType = "int[]"
-                        print(test["test"])
                         line2 = test["test"].replace("]", "}")
                         line2 = line2.replace("[", "new " + parameterType + "[] {")
                         line2 = line2.replace("{new " + parameterType + "[]", "{ new " + parameterType)
@@ -253,17 +256,16 @@ for line in file.readlines():
                     assertions += ";\n\t\t"
 
                     if "shouldFail" in test:
-                        assertions += "\t"
-                        assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
-
-                    if "shouldFail" in test and test["shouldFail"]:
+                        assertions += "\tfail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
+                        assertions += "} catch(" + test["exceptionExpected"] + " e){\n\t\t"
                         assertions += "} catch(Exception e){\n\t\t"
+                        assertions += "\tfail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
+                        assertions += "}"
+                        #assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
 
-                        if "shouldFail" not in test:
-                            assertions += "\t"
-                            assertions += "fail(" + '"' + '"' + ");\n\t\t"
-
-
+                    if "filesInExercise" in data and data["filesInExercise"]:
+                        assertions += "} catch(Exception e){\n\t\t\t"
+                        assertions += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
                         assertions += "}\n"
 
 

@@ -11,8 +11,8 @@
         },
         {
             "test": "countLines(\"./fakeFile\")",
-            "shouldFail": true,
-            "errorFeedback": "Il fallait catch une IOException"
+            "expected": -1,
+            "errorFeedback": "Il faut return -1 en cas d'exception"
         }
     ]
 }

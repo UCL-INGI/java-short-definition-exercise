@@ -28,6 +28,7 @@
         {
             "test": "pop()",
             "shouldFail": true,
+            "exceptionExpected": "IllegalStateException",
             "errorFeedback": "pop on empty"
         }
     ]

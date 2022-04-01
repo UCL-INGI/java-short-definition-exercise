@@ -19,7 +19,7 @@
             "test": "main_2(new String[] {\"1\",\"2\"})",
             "checkConsole": true,
             "expected": "3",
-            "errorFeedback": "main_1() should give 3"
+            "errorFeedback": "main_2() should give 3"
         }
     ]
 }
