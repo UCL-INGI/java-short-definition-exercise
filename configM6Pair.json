@@ -5,11 +5,10 @@
     "constructorWithParameters": true,
     "tests":[
         {
-            "classToCall": "Pair",
             "test": "opposite()",
             "constructorParameters": [12, 3],
             "expected": "new Pair(-12,-3)",
-            "errorFeedback": "opposite of Pair(12, 3) shoud return Pair(-12,-3)"
+            "errorFeedback": "opposite of Pair(12, 3) should return Pair(-12,-3)"
         }
     ]
 }

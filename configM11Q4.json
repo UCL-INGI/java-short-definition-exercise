@@ -1,0 +1,35 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "nameAsk": "Queue",
+    "tests":[
+        {
+            "previousCalls": "ajoute(1)",
+            "test": "toString()",
+            "expected": "1 |",
+            "errorFeedback": "depth() should give 1"
+        },
+        {
+            "previousCalls": "push(3)",
+            "test": "depth()",
+            "expected": 2,
+            "errorFeedback": "depth() should give 2"
+        },
+        {
+            "test": "pop()",
+            "expected": 3,
+            "errorFeedback": "pop() should give 3"
+        },
+        {
+            "test": "pop()",
+            "expected": 1,
+            "errorFeedback": "pop() should give 1"
+        },
+        {
+            "test": "pop()",
+            "shouldFail": true,
+            "exceptionExpected": "IllegalStateException",
+            "errorFeedback": "pop on empty"
+        }
+    ]
+}

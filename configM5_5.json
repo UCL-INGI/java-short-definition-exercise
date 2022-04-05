@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "mean",
     "tests":[
         {
             "test": "mean([1.0, 2.0, 3.0])",

@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "sais",
     "tests":[
         {
             "test": "sais(2, 2)",

@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "amende",
     "tests":[
         {
             "test": "amende(50, 55)",

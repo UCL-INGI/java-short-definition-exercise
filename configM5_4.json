@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "oppose",
     "tests":[
         {
             "test": "oppose([1, 2, 3])",

@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "car",
     "tests":[
         {
             "test": "car('a')",

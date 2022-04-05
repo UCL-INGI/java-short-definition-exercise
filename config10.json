@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "diff",
     "tests":[
         {
             "test": "diff(1, 2, 3)",

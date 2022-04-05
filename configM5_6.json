@@ -1,7 +1,6 @@
 {
     "askSignature": true,
     "askFor": "method",
-    "nameAsk": "croissant",
     "tests":[
         {
             "test": "croissant([1.0, 2.0, 3.0])",

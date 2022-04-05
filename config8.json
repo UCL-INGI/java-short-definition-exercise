@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "max",
     "tests":[
         {
             "test": "max(5, 10, 15)",

@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "askName": "countLines",
     "filesInExercise": true,
     "tests":[
         {

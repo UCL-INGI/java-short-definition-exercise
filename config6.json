@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "bissextile",
     "tests":[
         {
             "test": "bissextile(2016)",

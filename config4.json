@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "quetelet",
     "tests":[
         {
             "test": "quetelet(2, 80)",

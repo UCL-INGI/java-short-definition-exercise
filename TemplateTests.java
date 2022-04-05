@@ -11,19 +11,17 @@ import student.Translations.Translator;
 import StudentCode.*;
 import student.*;
 
-
+ADDITIONAL_IMPORTS
 
 public class Tests {
 
     @Test
     public void testLauncher(){
-        tests();
+        CONFIG_TESTS
     }
 
-    public void tests(){
-        Pair pairStudent = new Pair(12, 3);
-		assertTrue(Translator.translate("opposite of Pair(12, 3) should return Pair(-12,-3)"), new Pair(-12,-3).equals(pair.opposite()));
-		
+    public void CONFIG_METHOD_NAME(){
+        ASSERTIONS
     }
 
 }

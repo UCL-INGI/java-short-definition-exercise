@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "xor",
     "tests":[
         {
             "test": "xor(true, true)",

@@ -1,7 +1,6 @@
 {
     "askSignature": false,
     "askFor": "method",
-    "nameAsk": "ordre",
     "tests":[
         {
             "test": "ordre(1, 2, 3)",

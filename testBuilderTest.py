@@ -1,22 +1,21 @@
 import json, re
 
-# check avec file (M6dem4 ? / M9Q3) ->
-# check avec mocks (M6dem1) -> OK ? Exo pas assez poussé ?
+# Ajouter regex types
 
 # Opening JSON file
-f = open('configM11Q1.json')
+exerciseDefinition = open('configM6Pair.json')
 
 # returns JSON object as
 # a dictionary
-data = json.load(f)
+data = json.load(exerciseDefinition)
 
-file = open('Tests.java', 'r+')
-fileEnd = open('ResultTest.java', 'w+')
+templateTestsFile = open('TemplateTests.java', 'r+')
+testsFile = open('Tests.java', 'w+')
 
-#nbTest = 0
-for line in file.readlines():
+# nbTest = 0
+for line in templateTestsFile.readlines():
 
-    #dataTest = data["tests"][nbTest]
+    # dataTest = data["tests"][nbTest]
     if "ADDITIONAL_IMPORTS" in line:
         additional_imports = ""
         for test in data["tests"]:
@@ -70,11 +69,13 @@ for line in file.readlines():
 
             if data["askFor"] == "class":
                 if not data["constructorWithParameters"]:
-                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "();\n\t\t"
+                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
+                        "nameAsk"] + "();\n\t\t"
 
             if data["askFor"] == "method":
-                if "nameAsk" in data:
-                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data["nameAsk"] + "();\n\t\t"
+                if "nameAsk" in data and "constructorWithParameters" in data and not data["constructorWithParameters"]:
+                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data[
+                        "nameAsk"] + "();\n\t\t"
                 elif "nameAsk" not in data:
                     assertions += "Etudiant etudiant = new Etudiant();\n\t\t"
 
@@ -89,15 +90,16 @@ for line in file.readlines():
                 nameTest = test["test"].split("(")[0]
 
                 if "constructorParameters" in test:
-                    if test["classToCall"] in assertions:
+                    if "classToCall" in test and test["classToCall"] in assertions:
                         assertions += test["classToCall"].lower() + "Student = new " + test["classToCall"] + "("
                     elif "classToCall" in test:
-                        assertions += test["classToCall"] + " " + test["classToCall"].lower() + "Student = new " + test["classToCall"] + "("
+                        assertions += test["classToCall"] + " " + test["classToCall"].lower() + "Student = new " + test[
+                            "classToCall"] + "("
                     elif data["nameAsk"] in assertions:
                         assertions += data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "("
                     else:
-                        assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "("
-
+                        assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
+                            "nameAsk"] + "("
 
                     parametersList = str(test["constructorParameters"])[1:-1].split(", ")
                     iParameter = 0
@@ -113,7 +115,7 @@ for line in file.readlines():
 
                         iParameter += 1
 
-                    #assertions += str(str(test["constructorParameters"])[1:-1]).replace("'", "\"")
+                    # assertions += str(str(test["constructorParameters"])[1:-1]).replace("'", "\"")
                     assertions += ");\n\t\t"
 
                 if data["askFor"] == "class" and nameTest not in distinctTests:
@@ -180,7 +182,8 @@ for line in file.readlines():
 
                     if "exceptionExpected" not in test:
                         assertions += "assertTrue("
-                        assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"", "\\\"") + '"' + ")" + ", "
+                        assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"",
+                                                                                                    "\\\"") + '"' + ")" + ", "
                     else:
                         assertions += "try {\n\t\t\t"
                     """
@@ -200,7 +203,7 @@ for line in file.readlines():
                     if "expected" in test and isinstance(test["expected"], list):
                         strExpected = str(test["expected"])
                         parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                        #parameters = str(test["expected"]).split("[")[1].split("]")[0].split(",")
+                        # parameters = str(test["expected"]).split("[")[1].split("]")[0].split(",")
                         parameterType = ""
                         # suppose que tous ont le même type
                         if re.match("^\[-?\d+$", parameters[0]):
@@ -261,25 +264,22 @@ for line in file.readlines():
                         assertions += "} catch(Exception e){\n\t\t"
                         assertions += "\tfail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
                         assertions += "}"
-                        #assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
+                        # assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
 
                     if "filesInExercise" in data and data["filesInExercise"]:
                         assertions += "} catch(Exception e){\n\t\t\t"
                         assertions += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
                         assertions += "}\n"
 
-
-                    if i != len(data["tests"])-1:
+                    if i != len(data["tests"]) - 1:
                         assertions += "\n\t\t"
-
-
 
                 i += 1
 
             line = line.replace("ASSERTIONS", assertions)
         # }
         # \n\n TEST_METHOD => si i == len(tests) - 1
-    fileEnd.write(line)
+    testsFile.write(line)
     """
     Mieux pour replace ?
     
@@ -297,6 +297,6 @@ for line in file.readlines():
     if ?[] => ?[]
     """
 # Closing file
-f.close()
-file.close()
-fileEnd.close()
+exerciseDefinition.close()
+templateTestsFile.close()
+testsFile.close()
