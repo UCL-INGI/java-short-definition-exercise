@@ -77,3 +77,8 @@ Note that in addition to that, you should set shouldFail to true.
 This will build a try catch block where only
 when you throw the appropriate Exception will succeed.
 If you did not throw anything or another Exception, the test will fail.
+
+
+- "hidden" : true/false - (optional) If the test should be in the class or not.
+This is useful if you want to hide some tests from the students and give an
+incomplete test class.
