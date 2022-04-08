@@ -8,7 +8,8 @@
             "classToCall": "Temps",
             "constructorParameters": [23, 59, 59],
             "expected": 23,
-            "errorFeedback": "getH() with Temps(23, 59, 59) should give 23"
+            "errorFeedback": "getH() with Temps(23, 59, 59) should give 23",
+            "showStudentOutput": true
         },
         {
             "previousCalls": "ajouter(new Temps(10, 20, 12))",

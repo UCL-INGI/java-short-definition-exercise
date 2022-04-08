@@ -5,7 +5,8 @@
         {
             "test": "egal([0.1, 0.2], [0.4, 0.5])",
             "expected": false,
-            "errorFeedback": ""
+            "errorFeedback": "",
+            "showStudentOutput": true
         },
         {
             "test": "egal([0.1, 0.2], [0.1, 0.2])",

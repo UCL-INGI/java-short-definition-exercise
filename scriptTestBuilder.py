@@ -48,7 +48,7 @@ for line in templateTestsFile.readlines():
 
             if data["askFor"] == "class":
                 if not data["constructorWithParameters"]:
-                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data[
+                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data[
                         "nameAsk"] + "();\n\t\t"
 
             if data["askFor"] == "method":
@@ -71,14 +71,14 @@ for line in templateTestsFile.readlines():
 
                     if "constructorParameters" in test:
                         if "classToCall" in test and test["classToCall"] in assertions:
-                            assertions += test["classToCall"].lower() + "Student = new " + test["classToCall"] + "("
+                            assertions += test["classToCall"].lower() + " = new " + test["classToCall"] + "("
                         elif "classToCall" in test:
-                            assertions += test["classToCall"] + " " + test["classToCall"].lower() + "Student = new " + test[
+                            assertions += test["classToCall"] + " " + test["classToCall"].lower() + " = new " + test[
                                 "classToCall"] + "("
                         elif data["nameAsk"] in assertions:
-                            assertions += data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "("
+                            assertions += data["nameAsk"].lower() + " = new " + data["nameAsk"] + "("
                         else:
-                            assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + "Student = new " + data["nameAsk"] + "("
+                            assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data["nameAsk"] + "("
 
                         parametersList = str(test["constructorParameters"])[1:-1].split(", ")
                         iParameter = 0
@@ -131,7 +131,7 @@ for line in templateTestsFile.readlines():
 
                     if test["test"].startswith("test"):
                         assertions += "try {\n\t\t\t"
-                        assertions += data["nameAsk"].lower() + "Student." + test["test"] + ";\n\t\t"
+                        assertions += data["nameAsk"].lower() + "." + test["test"] + ";\n\t\t"
                         assertions += "} catch (AssertionError e){\n\t\t\t"
                         assertions += "fail(" + '"' + "vos tests pour " + nameTest + " ne passent pas" + '"' + ");\n\t\t"
                         assertions += "}\n\n\t\t"
@@ -163,27 +163,53 @@ for line in templateTestsFile.readlines():
                             assertions += "assertTrue("
                             assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"", "\\\"") + '"'
 
+                            if "showStudentOutput" in test and test["showStudentOutput"]:
+                                assertions += " + \" | Your code returned : \" + "
+                                if "expected" in test and "[" in str(test["expected"]):
+                                    assertions += "Arrays.deepToString("
+
+                                nomClasse = "Etudiant"
+
+                                if "checkConsole" in test and test["checkConsole"]:
+                                    assertions += "rep_student"
+
+                                elif data["askFor"] == "class" and "classToCall" in test:
+                                    nomClasse = test["classToCall"].lower()
+
+                                elif "nameAsk" in data and data["nameAsk"] != "":
+                                    nomClasse = data["nameAsk"].lower()
+
+                                if "rep_student" not in assertions:
+                                    assertions += nomClasse + "."
+
+                                if "rep_student" not in assertions and "[" in test["test"]:
+                                    strExpected = str(test["test"])
+                                    parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
+                                    parameterType = ""
+                                    # suppose que tous ont le même type
+                                    if re.match("^((-)?\d\.\d)$", parameters[0]):
+                                        parameterType = "double"
+                                    elif re.match("^-?\d$", parameters[0]):
+                                        parameterType = "int"
+                                    elif re.match("^\[\d+$", parameters[0]):
+                                        parameterType = "int[]"
+                                    line2 = test["test"].replace("]", "}")
+                                    line2 = line2.replace("[", "new " + parameterType + "[] {")
+                                    line2 = line2.replace("{new " + parameterType + "[]", "{ new " + parameterType)
+                                    assertions += line2
+                                elif "checkConsole" not in test or not test["checkConsole"]:
+                                    assertions += test["test"]
+
+                                if "expected" in test and "[" in str(test["expected"]):
+                                    assertions += ")"
+
                             assertions += ")" + ", "
                         else:
                             assertions += "try {\n\t\t\t"
-                        """
-                        # marche pas ?
-                        if data["askFor"] == "class" and data["constructorWithParameters"] and "expected" not in test:
-                            print(iClass)
-                            if isinstance(data["constructorParameters"][iClass][0], str):
-                                assertions += '"' + str(data["constructorParameters"][iClass][0]) + '"' +".equals("
-    
-                            if iClass < len(data["constructorParameters"]) - 1:
-                                iClass += 1
-                            else:
-                                iClass = 0
-                            #assertions += str(data["constructorParameters"][iClass][0])
-                        """
 
                         if "expected" in test and isinstance(test["expected"], list):
                             strExpected = str(test["expected"])
                             parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                            # parameters = str(test["expected"]).split("[")[1].split("]")[0].split(",")
                             parameterType = ""
                             # suppose que tous ont le même type
                             if re.match("^\[-?\d+$", parameters[0]):
@@ -209,9 +235,8 @@ for line in templateTestsFile.readlines():
                         if "checkConsole" in test and test["checkConsole"]:
                             assertions += "rep_student"
                         else:
-                            assertions += nomClasse + "."
+                            assertions += nomClasse.lower() + "."
 
-                        # déterminer type de tableau si passer en param (cf. M5_1)
                         if "rep_student" not in assertions and "[" in test["test"]:
                             strExpected = str(test["test"])
                             parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")

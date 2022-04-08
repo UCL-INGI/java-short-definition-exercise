@@ -65,6 +65,7 @@
             "classToCall": "Stack",
             "test": "pop()",
             "shouldFail": true,
+            "exceptionExpected": "EmptyStackException",
             "errorFeedback": "pop sur une Stack vide. Il fallait lancer une EmptyStackException."
         }
     ]

@@ -2,8 +2,6 @@ package src;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
-import java.util.Random;
 import java.text.MessageFormat;
 
 import student.Translations.Translator;

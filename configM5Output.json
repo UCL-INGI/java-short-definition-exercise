@@ -7,7 +7,8 @@
             "test": "main_1(new String[] {\"Un\"})",
             "checkConsole": true,
             "expected": "Un\\n",
-            "errorFeedback": "main_1() should give 1"
+            "errorFeedback": "main_1() should give 1",
+            "showStudentOutput": true
         },
         {
             "test": "main_1(new String[] {\"Un\",\"Deux\"})",

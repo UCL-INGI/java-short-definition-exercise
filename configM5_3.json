@@ -5,7 +5,8 @@
         {
             "test": "add([[1, 2, 3]], [[3, 2, 1]])",
             "expected": [[4, 4, 4]],
-            "errorFeedback": "mauvais resultat"
+            "errorFeedback": "mauvais resultat",
+            "showStudentOutput": true
         }
     ]
 }

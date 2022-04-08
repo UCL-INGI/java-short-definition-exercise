@@ -5,7 +5,8 @@
         {
             "test": "sumFirstEvenIntegers(1)",
             "expected": 0,
-            "errorFeedback": "sumFirstEvenIntegers(1) should give 0"
+            "errorFeedback": "sumFirstEvenIntegers(1) should give 0",
+            "showStudentOutput": true
         },
         {
             "test": "sumFirstEvenIntegers(3)",

@@ -1,5 +1,4 @@
 {
-    "askSignature": false,
     "askFor": "method",
     "tests":[
         {

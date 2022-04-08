@@ -82,3 +82,9 @@ If you did not throw anything or another Exception, the test will fail.
 - "hidden" : true/false - (optional) If the test should be in the class or not.
 This is useful if you want to hide some tests from the students and give an
 incomplete test class.
+
+
+- "showStudentOutput" : true/false - (optional) In case of failure and if this field is set to true,
+The result of the student will be appended to the ``errorFeedback`` message.
+This information is optional (false by default) because it might be a good idea to hide the student
+result in order to help the student to debug his code by reading it and understand what happened.
