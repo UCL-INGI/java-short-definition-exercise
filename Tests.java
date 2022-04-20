@@ -9,33 +9,58 @@ import student.Translations.Translator;
 import StudentCode.*;
 import student.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.lang.reflect.*;
 
 
 public class Tests {
 
     @Test
     public void tests(){
-        PrintStream old = System.out;
-		String student_answer = "";
+        
+        BioInfo bioinfo = new BioInfo();
+        
+        
+        
+        try {
+            BioInfo.class.getDeclaredMethod("isADN", String.class);
+        } catch (NoSuchMethodException e){
+            fail("You should have a method isADN");
+        }
+
+        try{
+		    assertTrue(
+                "isADN(\"AT\") should give true",
+                true == bioinfo.isADN("AT")
+            );
+		} catch(Exception e){
+		    fail("Unexpected exception");
+		}
+
+        
+        
+        try {
+            BioInfo.class.getDeclaredMethod("testIsADN");
+        } catch (NoSuchMethodException e){
+            fail("You should have a method testIsADN");
+        }
+
+        try {
+			bioinfo.testIsADN();
+		} catch (AssertionError e){
+			fail("vos tests pour testIsADN ne passent pas");
+		}
 		
-        Etudiant etudiant = new Etudiant();
         
+        try {
+            BioInfo.class.getDeclaredMethod("count", String.class, char.class);
+        } catch (NoSuchMethodException e){
+            fail("You should have a method count");
+        }
 
         try{
-		    ByteArrayOutputStream baos0 = new ByteArrayOutputStream();
-		    PrintStream ps0 = new PrintStream(baos0);
-		    System.setOut(ps0);
-            etudiant.main_1(new String[]{"Un"});
-            System.out.flush();
-            System.setOut(old);
-
-            student_answer = baos0.toString();
-		    
 		    assertTrue(
-                "main_1() should give \"Un\n\"" + " | Your code returned : "  + student_answer,
-                "Un\n".equals(student_answer)
+                "isADN(\"AT\", 'A') should give 1",
+                1 == bioinfo.count("AT", 'A')
             );
 		} catch(Exception e){
 		    fail("Unexpected exception");
@@ -43,20 +68,16 @@ public class Tests {
 
         
         
+        try {
+            BioInfo.class.getDeclaredMethod("count", String.class, char.class);
+        } catch (NoSuchMethodException e){
+            fail("You should have a method count");
+        }
 
         try{
-		    ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-		    PrintStream ps1 = new PrintStream(baos1);
-		    System.setOut(ps1);
-            etudiant.main_1(new String[]{"Un","Deux"});
-            System.out.flush();
-            System.setOut(old);
-
-            student_answer = baos1.toString();
-		    
 		    assertTrue(
-                "main_1() should give 1",
-                "Un\nDeux\n".equals(student_answer)
+                "isADN(\"TCT\", 'A) should give 0",
+                0 == bioinfo.count("TCT", 'A')
             );
 		} catch(Exception e){
 		    fail("Unexpected exception");
@@ -64,26 +85,65 @@ public class Tests {
 
         
         
+        try {
+            BioInfo.class.getDeclaredMethod("testCount");
+        } catch (NoSuchMethodException e){
+            fail("You should have a method testCount");
+        }
+
+        try {
+			bioinfo.testCount();
+		} catch (AssertionError e){
+			fail("vos tests pour testIsADN ne passent pas");
+		}
+		
+        
+        try {
+            BioInfo.class.getDeclaredMethod("distanceH", String.class, String.class);
+        } catch (NoSuchMethodException e){
+            fail("You should have a method distanceH");
+        }
 
         try{
-		    ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-		    PrintStream ps2 = new PrintStream(baos2);
-		    System.setOut(ps2);
-            etudiant.main_2(new String[]{"1","2"});
-            System.out.flush();
-            System.setOut(old);
-
-            student_answer = baos2.toString();
-		    
 		    assertTrue(
-                "main_2() should give 3",
-                "3".equals(student_answer)
+                "isADN(\"AT\", \"AT\") should give 0",
+                0 == bioinfo.distanceH("AT", "AT")
             );
 		} catch(Exception e){
 		    fail("Unexpected exception");
 		}
 
         
+        
+        try {
+            BioInfo.class.getDeclaredMethod("distanceH", String.class, String.class);
+        } catch (NoSuchMethodException e){
+            fail("You should have a method distanceH");
+        }
+
+        try{
+		    assertTrue(
+                "distanceH(\"TCT\", \"TGA\") should give 2",
+                2 == bioinfo.distanceH("TCT", "TGA")
+            );
+		} catch(Exception e){
+		    fail("Unexpected exception");
+		}
+
+        
+        
+        try {
+            BioInfo.class.getDeclaredMethod("testDistanceH");
+        } catch (NoSuchMethodException e){
+            fail("You should have a method testDistanceH");
+        }
+
+        try {
+			bioinfo.testDistanceH();
+		} catch (AssertionError e){
+			fail("vos tests pour testIsADN ne passent pas");
+		}
+		
     }
 
 }

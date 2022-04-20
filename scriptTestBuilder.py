@@ -3,7 +3,9 @@ import re
 
 import jinja2
 
-exerciseDefinition = open('config.json')
+# params pour getDeclared
+
+exerciseDefinition = open('configM4.json')
 dataExercise = json.load(exerciseDefinition)
 
 testFile = open('Tests.java', 'w+')
@@ -115,13 +117,19 @@ i = 0
 
 for test in dataExercise["tests"]:
     errorFeedback = ""
-    nameTest = str(test["test"])[:str(test["test"]).find("(")]
+
+    nameTest = '"' + str(test["test"])[:str(test["test"]).find("(")] + '"'
+
+    if "parametersType" in test:
+        for type in test["parametersType"]:
+            nameTest += ", " + type + ".class"
+
     testsName.append(nameTest)
 
     if "hidden" not in test or not test["hidden"]:
         shouldCloseBrackets = False
 
-        if "expected" in test and type(test["expected"]) == str:
+        if "expected" in test and isinstance(test["expected"], str):
 
             if str(test["expected"]).startswith("new"):
                 assertionResult += test["expected"] + ".equals("
@@ -129,7 +137,7 @@ for test in dataExercise["tests"]:
                 assertionResult += '"' + test["expected"] + '"' + ".equals("
 
             shouldCloseBrackets = True
-        elif "expected" in test and type(test["expected"]) == bool:
+        elif "expected" in test and isinstance(test["expected"], bool):
             assertionResult += str(test["expected"]).lower() + " == "
 
         elif "expected" in test and "[" in str(test["expected"]):

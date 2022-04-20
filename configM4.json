@@ -6,6 +6,7 @@
     "tests":[
         {
             "test": "isADN(\"\")",
+            "parametersType": ["String"],
             "expected": true,
             "errorFeedback": "isADN(\"\") should give false",
             "showStudentOutput": true,
@@ -13,12 +14,14 @@
         },
         {
             "test": "isADN(\"Z\")",
+            "parametersType": ["String"],
             "expected": false,
             "errorFeedback": "isADN(\"Z\") should give false",
             "hidden": true
         },
         {
             "test": "isADN(\"AT\")",
+            "parametersType": ["String"],
             "expected": true,
             "errorFeedback": "isADN(\"AT\") should give true"
         },
@@ -27,12 +30,14 @@
         },
         {
             "test": "count(\"AT\", 'A')",
+            "parametersType": ["String", "char"],
             "expected": 1,
             "errorFeedback": "isADN(\"AT\", 'A') should give 1"
         }
         ,
         {
             "test": "count(\"TCT\", 'A')",
+            "parametersType": ["String", "char"],
             "expected": 0,
             "errorFeedback": "isADN(\"TCT\", 'A) should give 0"
         },
@@ -41,11 +46,13 @@
         },
         {
             "test": "distanceH(\"AT\", \"AT\")",
+            "parametersType": ["String", "String"],
             "expected": 0,
             "errorFeedback": "isADN(\"AT\", \"AT\") should give 0"
         },
         {
             "test": "distanceH(\"TCT\", \"TGA\")",
+            "parametersType": ["String", "String"],
             "expected": 2,
             "errorFeedback": "distanceH(\"TCT\", \"TGA\") should give 2"
         },

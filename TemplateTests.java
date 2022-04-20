@@ -23,9 +23,9 @@ public class Tests {
 
         {%- if askFor == "class" %}
         try {
-            {{ namesAsk[loop.index0] }}.class.getDeclaredMethod("{{ testsName[loop.index0] }}");
+            {{ namesAsk[loop.index0] }}.class.getDeclaredMethod({{ testsName[loop.index0] }});
         } catch (NoSuchMethodException e){
-            fail("You should have a method {{ testsName[loop.index0] }}");
+            fail("You should have a method {{ testsName[loop.index0].split('\"')[1].split('\"')[0] }}");
         }
         {%- endif %}
 
