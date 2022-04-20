@@ -8,7 +8,8 @@
             "test": "getNom()",
             "constructorParameters": ["Anatole", 1500],
             "expected": "Anatole",
-            "errorFeedback": "getNom() with Employe(\"Anatole\", 1500) should give \"Anatole\""
+            "errorFeedback": "getNom() with Employe(\"Anatole\", 1500) should give \"Anatole\"",
+            "hidden": true
         },
         {
             "test": "getNom()",
@@ -20,7 +21,8 @@
             "test": "getSalaire()",
             "constructorParameters": ["Anatole", 1500],
             "expected": 1500,
-            "errorFeedback": "getSalaire() with Employe(\"Anatole\", 1500) should give 1500"
+            "errorFeedback": "getSalaire() with Employe(\"Anatole\", 1500) should give 1500",
+            "showStudentOutput": true
         },
         {
             "test": "toString()",
@@ -41,5 +43,6 @@
             "expected": 1100,
             "errorFeedback": "augemente(10) with Employe(\"Employe1\", 1000) should give 1100"
         }
+
     ]
 }

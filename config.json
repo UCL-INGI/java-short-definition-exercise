@@ -2,12 +2,12 @@
     "askFor": "method",
     "tests":[
         {
-            "test": "average(1.0,2.0,3.0)",
+            "test": "moye(1.0,2.0,3.0)",
             "expected": 2.0,
             "errorFeedback": "The average with 1.0, 2.0 and 3.0 should be 2.0"
         },
         {
-            "test": "average(0.0,0.0,0.0)",
+            "test": "moye(0.0,0.0,0.0)",
             "expected": 0.0,
             "errorFeedback": "The average with 0.0, 0.0 and 0.0 should be 0.0"
         }

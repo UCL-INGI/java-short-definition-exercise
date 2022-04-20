@@ -20,7 +20,7 @@
         {
             "test": "quetelet(2, 200)",
             "expected": "obèse",
-            "errorFeedback": "2m and 120kg should give obèse"
+            "errorFeedback": "2m and 2000kg should give obèse"
         }
     ]
 }

@@ -4,20 +4,21 @@
     "constructorWithParameters": false,
     "tests":[
         {
-            "test": "main_1(new String[] {\"Un\"})",
+            "test": "main_1(new String[]{\"Un\"})",
+
             "checkConsole": true,
             "expected": "Un\\n",
-            "errorFeedback": "main_1() should give 1",
+            "errorFeedback": "main_1() should give \"Un\\n\"",
             "showStudentOutput": true
         },
         {
-            "test": "main_1(new String[] {\"Un\",\"Deux\"})",
+            "test": "main_1(new String[]{\"Un\",\"Deux\"})",
             "checkConsole": true,
             "expected": "Un\\nDeux\\n",
             "errorFeedback": "main_1() should give 1"
         },
         {
-            "test": "main_2(new String[] {\"1\",\"2\"})",
+            "test": "main_2(new String[]{\"1\",\"2\"})",
             "checkConsole": true,
             "expected": "3",
             "errorFeedback": "main_2() should give 3"

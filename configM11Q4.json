@@ -10,23 +10,23 @@
             "errorFeedback": "depth() should give 1"
         },
         {
-            "previousCalls": "push(3)",
+            "previousCalls": "ajoute(3)",
             "test": "depth()",
             "expected": 2,
             "errorFeedback": "depth() should give 2"
         },
         {
-            "test": "pop()",
+            "test": "retire()",
             "expected": 3,
             "errorFeedback": "pop() should give 3"
         },
         {
-            "test": "pop()",
+            "test": "retire()",
             "expected": 1,
             "errorFeedback": "pop() should give 1"
         },
         {
-            "test": "pop()",
+            "test": "retire()",
             "shouldFail": true,
             "exceptionExpected": "IllegalStateException",
             "errorFeedback": "pop on empty"

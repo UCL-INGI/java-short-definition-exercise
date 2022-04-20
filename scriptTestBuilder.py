@@ -1,307 +1,285 @@
 import json
 import re
 
+import jinja2
+
 exerciseDefinition = open('config.json')
-data = json.load(exerciseDefinition)
+dataExercise = json.load(exerciseDefinition)
 
-templateTestsFile = open('TemplateTests.java', 'r+')
-testsFile = open('Tests.java', 'w+')
+testFile = open('Tests.java', 'w+')
 
-for line in templateTestsFile.readlines():
-    if "ADDITIONAL_IMPORTS" in line:
-        additional_imports = ""
-        for test in data["tests"]:
-            if "Arrays" not in additional_imports and "expected" in test and str(test["expected"]).startswith("["):
-                additional_imports += "import java.util.Arrays;\n"
-            if "ByteArrayOutputStream" not in additional_imports and "checkConsole" in test:
-                additional_imports += "import java.io.ByteArrayOutputStream;\n"
-                additional_imports += "import java.io.PrintStream;\n"
+templateLoader = jinja2.FileSystemLoader("./")
+templateEnv = jinja2.Environment(loader=templateLoader)
+TEMPLATE_FILE = "TemplateTests.java"
+template = templateEnv.get_template(TEMPLATE_FILE)
 
-        if data["askFor"] == "class":
-            additional_imports += "import java.lang.reflect.*;\n"
-        if "filesInExercise" in data and data["filesInExercise"]:
-            additional_imports += "import java.io.*;\n"
+# IMPORTS
+additionalImports = ""
+for test in dataExercise["tests"]:
+    if "Arrays" not in additionalImports and "expected" in test and str(test["expected"]).startswith("["):
+        additionalImports += "import java.util.Arrays;\n"
 
-        line = line.replace("ADDITIONAL_IMPORTS", additional_imports)
-    if "CONFIG_TESTS" in line:
-        line = line.replace("CONFIG_TESTS", "tests();")
+    if "ByteArrayOutputStream" not in additionalImports and "checkConsole" in test:
+        additionalImports += "import java.io.ByteArrayOutputStream;\n"
+        additionalImports += "import java.io.PrintStream;\n"
 
+if dataExercise["askFor"] == "class":
+    additionalImports += "import java.lang.reflect.*;\n"
+
+if "filesInExercise" in dataExercise and dataExercise["filesInExercise"]:
+    additionalImports += "import java.io.*;\n"
+# --------------------------------------------------------------------------------------------------------------
+
+# Previous Code
+previousCode = ""
+
+if "filesInExercise" in dataExercise and dataExercise["filesInExercise"]:
+    previousCode += "BufferedReader br = null;\n\t\t"
+    previousCode += "try{\n\t\t\t"
+    previousCode += "br = new BufferedReader(new FileReader(new File(\"./StudentCode/Etudiant.class\")));\n\t\t"
+    previousCode += "} catch (Exception e){\n\t\t\t"
+    previousCode += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
+    previousCode += "}\n\n\t\t"
+    previousCode += "if (!br.lines().anyMatch(s -> s.trim().contains(\"BufferedReader\"))) { fail(\"BufferedReader expected\"); }\n\t\t"
+    previousCode += "if (!br.lines().anyMatch(s -> s.trim().contains(\"close\"))) { fail(\"close() expected\"); }\n\n\t\t"
+
+if "ByteArrayOutputStream" in additionalImports:
+    previousCode += "PrintStream old = System.out;\n\t\t"
+    previousCode += "String student_answer = \"\";\n\t\t"
+# --------------------------------------------------------------------------------------------------------------
+
+# INSTANCE
+studentInstance = ""
+instance = ""
+classToCall = ""
+instancesToCall = []
+namesAsk = []
+if "constructorWithParameters" not in dataExercise or not dataExercise["constructorWithParameters"]:
+    if "nameAsk" not in dataExercise:
+        studentInstance += "Etudiant etudiant = new Etudiant();"
+        instance = "etudiant"
+        classToCall = "Etudiant"
     else:
-        if "CONFIG_METHOD_NAME" in line:
-            line = line.replace("CONFIG_METHOD_NAME", "tests")
+        studentInstance += dataExercise["nameAsk"] + " " + dataExercise["nameAsk"].lower() + " = new " + dataExercise["nameAsk"] + "();"
+        instance = dataExercise["nameAsk"].lower()
+        classToCall = dataExercise["nameAsk"]
 
-        elif "ASSERTIONS" in line:
-            i = 0
-            iClass = 0
-            assertions = ""
-            distinctTests = []
+    for test in range(len(dataExercise["tests"])):
+        instancesToCall.append(instance)
+        namesAsk.append(classToCall)
 
-            if "filesInExercise" in data and data["filesInExercise"]:
-                assertions += "BufferedReader br = null;\n\t\t"
-                assertions += "try{\n\t\t\t"
-                assertions += "br = new BufferedReader(new FileReader(new File(\"./StudentCode/Etudiant.class\")));\n\t\t"
-                assertions += "} catch (Exception e){\n\t\t\t"
-                assertions += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
-                assertions += "}\n\n\t\t"
-                assertions += "if (!br.lines().anyMatch(s -> s.trim().contains(\"BufferedReader\"))) { fail(\"BufferedReader expected\"); }\n\t\t"
-                assertions += "if (!br.lines().anyMatch(s -> s.trim().contains(\"close\"))) { fail(\"close() expected\"); }\n\n\t\t"
+else:
+    i = 0
+    fieldToSelect = ""
+    for test in dataExercise["tests"]:
+        if ("hidden" not in test or not test["hidden"]) and "constructorParameters" in test and dataExercise["constructorWithParameters"]:
 
-            if data["askFor"] == "class":
-                if not data["constructorWithParameters"]:
-                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data[
-                        "nameAsk"] + "();\n\t\t"
+            if "classToCall" in test:
+                fieldToSelect = test["classToCall"]
 
-            if data["askFor"] == "method":
-                if "nameAsk" in data and "constructorWithParameters" in data and not data["constructorWithParameters"]:
-                    assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data[
-                        "nameAsk"] + "();\n\t\t"
-                elif "nameAsk" not in data:
-                    assertions += "Etudiant etudiant = new Etudiant();\n\t\t"
+            else:
+                fieldToSelect = dataExercise["nameAsk"]
 
-            if i == 0 and "ByteArrayOutputStream" in additional_imports:
-                assertions += "ByteArrayOutputStream baos;\n\t\t"
-                assertions += "PrintStream ps;\n\t\t"
-                assertions += "PrintStream old = System.out;\n\t\t"
-                assertions += "String rep_student;\n\t\t"
-                assertions += "\n\t\t"
+            studentInstance += fieldToSelect + " " + fieldToSelect.lower() + str(i) + " = new " + fieldToSelect + "("
+            instancesToCall.append(fieldToSelect.lower() + str(i))
+            namesAsk.append(fieldToSelect)
 
-            for test in data["tests"]:
-                if "hidden" not in test or not test["hidden"]:
-                    nameTest = test["test"].split("(")[0]
+            parametersList = str(test["constructorParameters"])[1:-1].split(", ")
+            iParameter = 0
 
-                    if "constructorParameters" in test:
-                        if "classToCall" in test and test["classToCall"] in assertions:
-                            assertions += test["classToCall"].lower() + " = new " + test["classToCall"] + "("
-                        elif "classToCall" in test:
-                            assertions += test["classToCall"] + " " + test["classToCall"].lower() + " = new " + test[
-                                "classToCall"] + "("
-                        elif data["nameAsk"] in assertions:
-                            assertions += data["nameAsk"].lower() + " = new " + data["nameAsk"] + "("
-                        else:
-                            assertions += data["nameAsk"] + " " + data["nameAsk"].lower() + " = new " + data["nameAsk"] + "("
+            for parameter in parametersList:
+                if parameter[1:].startswith("new "):
+                    studentInstance += str(parameter)[1:]
+                else:
+                    studentInstance += str(parameter).replace("'", "\"")
 
-                        parametersList = str(test["constructorParameters"])[1:-1].split(", ")
-                        iParameter = 0
+                if iParameter != len(parametersList) - 1:
+                    studentInstance += ", "
 
-                        for parameter in parametersList:
-                            if parameter[1:].startswith("new "):
-                                assertions += str(parameter)[1:-1]
-                            else:
-                                assertions += str(parameter).replace("'", "\"")
+                iParameter += 1
 
-                            if iParameter != len(parametersList) - 1:
-                                assertions += ", "
+            i += 1
+            studentInstance += ");\n\t\t"
+        else:
+            instancesToCall.append("")
+            namesAsk.append("")
 
-                            iParameter += 1
+# --------------------------------------------------------------------------------------------------------------
 
-                        # assertions += str(str(test["constructorParameters"])[1:-1]).replace("'", "\"")
-                        assertions += ");\n\t\t"
+# Assertion Test
+assertionResult = ""
+assertionsResults = []
+errorsFeedbacks = []
+testsName = []
+i = 0
 
-                    if data["askFor"] == "class" and nameTest not in distinctTests:
-                        distinctTests.append(nameTest)
+for test in dataExercise["tests"]:
+    errorFeedback = ""
+    nameTest = str(test["test"])[:str(test["test"]).find("(")]
+    testsName.append(nameTest)
 
-                        if i != 0:
-                            assertions += "\n\t\t"
+    if "hidden" not in test or not test["hidden"]:
+        shouldCloseBrackets = False
 
-                        parameterValue = test["test"].split("(")[1].split(")")[0]
-                        parameterType = ""
-                        if re.match("^\".*\"$", parameterValue):
-                            parameterType = "String"
-                        elif re.match("^\d+$", parameterValue):
-                            parameterType = "int"
-                        elif re.match("^new [A-Z]{1}.*$", parameterValue):
-                            parameterType = str(parameterValue).split("new ")[1].split("(")[0]
-                        assertions += "Method " + nameTest + "Stud = null;\n\n\t\t"
-                        assertions += "try {\n\t\t\t"
+        if "expected" in test and type(test["expected"]) == str:
 
-                        if "classToCall" in test:
-                            assertions += nameTest + "Stud = " + test["classToCall"] + ".class.getDeclaredMethod("
-                        else:
-                            assertions += nameTest + "Stud = " + data["nameAsk"] + ".class.getDeclaredMethod("
+            if str(test["expected"]).startswith("new"):
+                assertionResult += test["expected"] + ".equals("
+            else:
+                assertionResult += '"' + test["expected"] + '"' + ".equals("
 
-                        assertions += '"' + nameTest + '"'
+            shouldCloseBrackets = True
+        elif "expected" in test and type(test["expected"]) == bool:
+            assertionResult += str(test["expected"]).lower() + " == "
 
-                        if parameterValue != "":
-                            assertions += ", " + parameterType + ".class"
+        elif "expected" in test and "[" in str(test["expected"]):
+            if type(test["expected"][0]) == int:
+                assertionResult += "Arrays.equals(new int[]" + str(test["expected"]).replace("[", "{").replace("]", "}") + ", "
+            else:
+                assertionResult += "Arrays.deepEquals(new "
+                nbCrochet = 0
+                elemExpected = test["expected"]
+                while type(elemExpected) == list:
+                    nbCrochet += 1
+                    elemExpected = elemExpected[0]
 
-                        assertions += ");\n\t\t"
-                        assertions += "} catch (NoSuchMethodException e){\n\t\t\t"
-                        assertions += "fail(" + '"' + "il vous faut une méthode " + nameTest + '"' + ");\n\t\t"
-                        assertions += "}\n\n\t\t"
+                parsedExpected = str(test["expected"]).replace("[", "{").replace("]", "}") + ", "
+                if type(elemExpected) == float:
+                    assertionResult += "double" + "[]" * nbCrochet
+                elif type(elemExpected) == bool:
+                    assertionResult += "boolean" + "[]" * nbCrochet
+                    parsedExpected = parsedExpected.replace("'", "").lower()
+                elif str(elemExpected).startswith("new"):
+                    elemExpected = str(elemExpected)[str(elemExpected).find(" ")+1:str(elemExpected).find("(")]
+                    assertionResult += elemExpected + "[]" * nbCrochet
+                    parsedExpected = parsedExpected.replace("'", "")
+                elif type(elemExpected) == str:
+                    assertionResult += "String" + "[]" * nbCrochet
+                    parsedExpected = parsedExpected.replace("'", '"')
+                elif type(elemExpected) == int:
+                    assertionResult += "int" + "[]" * nbCrochet
 
-                    if test["test"].startswith("test"):
-                        assertions += "try {\n\t\t\t"
-                        assertions += data["nameAsk"].lower() + "." + test["test"] + ";\n\t\t"
-                        assertions += "} catch (AssertionError e){\n\t\t\t"
-                        assertions += "fail(" + '"' + "vos tests pour " + nameTest + " ne passent pas" + '"' + ");\n\t\t"
-                        assertions += "}\n\n\t\t"
+                assertionResult += parsedExpected
+            shouldCloseBrackets = True
 
-                    if not test["test"].startswith("test"):
-                        nomClasse = "Etudiant"
+        elif "expected" in test:
+            assertionResult += str(test["expected"]) + " == "
 
-                        if data["askFor"] == "class" and "classToCall" in test:
-                            nomClasse = test["classToCall"].lower()
-
-                        elif "nameAsk" in data and data["nameAsk"] != "":
-                            nomClasse = data["nameAsk"].lower()
-
-                        if "previousCalls" in test:
-                            assertions += nomClasse + "." + test["previousCalls"] + ";\n\t\t"
-
-                        if "filesInExercise" in data and data["filesInExercise"]:
-                            assertions += "try {\n\t\t\t"
-
-                        if "checkConsole" in test and test["checkConsole"]:
-                            assertions += "baos = new ByteArrayOutputStream();\n\t\t"
-                            assertions += "ps = new PrintStream(baos);\n\t\t"
-                            assertions += "System.setOut(ps);\n\t\t"
-                            assertions += nomClasse + "." + test["test"] + ";\n\t\t"
-                            assertions += "System.out.flush();\n\t\t"
-                            assertions += "rep_student = baos.toString();\n\t\t"
-
-                        if "exceptionExpected" not in test:
-                            assertions += "assertTrue("
-                            assertions += "Translator.translate(" + '"' + test["errorFeedback"].replace("\"", "\\\"") + '"'
-
-                            if "showStudentOutput" in test and test["showStudentOutput"]:
-                                assertions += " + \" | Your code returned : \" + "
-                                if "expected" in test and "[" in str(test["expected"]):
-                                    assertions += "Arrays.deepToString("
-
-                                nomClasse = "Etudiant"
-
-                                if "checkConsole" in test and test["checkConsole"]:
-                                    assertions += "rep_student"
-
-                                elif data["askFor"] == "class" and "classToCall" in test:
-                                    nomClasse = test["classToCall"].lower()
-
-                                elif "nameAsk" in data and data["nameAsk"] != "":
-                                    nomClasse = data["nameAsk"].lower()
-
-                                if "rep_student" not in assertions:
-                                    assertions += nomClasse + "."
-
-                                if "rep_student" not in assertions and "[" in test["test"]:
-                                    strExpected = str(test["test"])
-                                    parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                                    parameterType = ""
-                                    # suppose que tous ont le même type
-                                    if re.match("^((-)?\d\.\d)$", parameters[0]):
-                                        parameterType = "double"
-                                    elif re.match("^-?\d$", parameters[0]):
-                                        parameterType = "int"
-                                    elif re.match("^\[\d+$", parameters[0]):
-                                        parameterType = "int[]"
-                                    line2 = test["test"].replace("]", "}")
-                                    line2 = line2.replace("[", "new " + parameterType + "[] {")
-                                    line2 = line2.replace("{new " + parameterType + "[]", "{ new " + parameterType)
-                                    assertions += line2
-                                elif "checkConsole" not in test or not test["checkConsole"]:
-                                    assertions += test["test"]
-
-                                if "expected" in test and "[" in str(test["expected"]):
-                                    assertions += ")"
-
-                            assertions += ")" + ", "
-                        else:
-                            assertions += "try {\n\t\t\t"
-
-                        if "expected" in test and isinstance(test["expected"], list):
-                            strExpected = str(test["expected"])
-                            parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                            parameterType = ""
-                            # suppose que tous ont le même type
-                            if re.match("^\[-?\d+$", parameters[0]):
-                                parameterType = "int[]"
-                            elif re.match("^-?\d+$", parameters[0]):
-                                parameterType = "int"
-
-                            line2 = str(test["expected"]).replace("]", "}")
-                            line2 = line2.replace("[", "new int" + "[] {")
-                            line2 = "new " + parameterType + "[] " + str(line2)[9:]
-
-                            if parameterType == "int":
-                                assertions += "Arrays.equals(" + str(line2) + ", "
-                            else:
-                                assertions += "Arrays.deepEquals(" + str(line2) + ", "
-                        elif "expected" in test and str(test["expected"]).startswith("new"):
-                            assertions += test["expected"] + ".equals("
-                        elif "expected" in test and isinstance(test["expected"], str):
-                            assertions += '"' + test["expected"] + '"' + ".equals("
-                        elif "expected" in test:
-                            assertions += str(test["expected"]).lower() + " == "
-
-                        if "checkConsole" in test and test["checkConsole"]:
-                            assertions += "rep_student"
-                        else:
-                            assertions += nomClasse.lower() + "."
-
-                        if "rep_student" not in assertions and "[" in test["test"]:
-                            strExpected = str(test["test"])
-                            parameters = strExpected[strExpected.find("[") + 1: len(strExpected) - 1].split(",")
-                            parameterType = ""
-                            # suppose que tous ont le même type
-                            if re.match("^((-)?\d\.\d)$", parameters[0]):
-                                parameterType = "double"
-                            elif re.match("^-?\d$", parameters[0]):
-                                parameterType = "int"
-                            elif re.match("^\[\d+$", parameters[0]):
-                                parameterType = "int[]"
-                            line2 = test["test"].replace("]", "}")
-                            line2 = line2.replace("[", "new " + parameterType + "[] {")
-                            line2 = line2.replace("{new " + parameterType + "[]", "{ new " + parameterType)
-                            assertions += line2
-                        elif "checkConsole" not in test or not test["checkConsole"]:
-                            assertions += test["test"]
-
-                        if "expected" in test and (isinstance(test["expected"], str) or isinstance(test["expected"], list)):
-                            assertions += ")"
-
-                        if "shouldFail" not in test:
-                            assertions += ")"
-
-                        assertions += ";\n\t\t"
-
-                        if "shouldFail" in test:
-                            assertions += "\tfail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
-                            assertions += "} catch(" + test["exceptionExpected"] + " e){\n\t\t"
-                            assertions += "} catch(Exception e){\n\t\t"
-                            assertions += "\tfail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
-                            assertions += "}"
-                            # assertions += "fail(" + '"' + test["errorFeedback"] + '"' + ");\n\t\t"
-
-                        if "filesInExercise" in data and data["filesInExercise"]:
-                            assertions += "} catch(Exception e){\n\t\t\t"
-                            assertions += "fail(" + '"' + "Unexpected Exception" + '"' + ");\n\t\t"
-                            assertions += "}\n"
-
-                        if i != len(data["tests"]) - 1:
-                            assertions += "\n\t\t"
-
+        if "checkConsole" in test:
+            assertionResult += "student_answer"
+        else:
+            while instancesToCall[i] == "":
                 i += 1
 
-            line = line.replace("ASSERTIONS", assertions)
-        # }
-        # \n\n TEST_METHOD => si i == len(tests) - 1
-    testsFile.write(line)
-    """
-    Mieux pour replace ?
-    
-    import re
-    re.sub(pattern, repl, string, count=0, flags=0)
-    
-    
-    ^((-)?\d\.\d)$ -> double
-    ^'(\S|\s)'$ -> char
-    ^".*"$ -> String
-    ^\d+$ -> int
-    ^(true|false)$ -> boolean
-    if new ???() -> type = ??? (split entre " " et '(')
-    if pas de new & CAPS + lettres => type = List ou import in imports
-    if ?[] => ?[]
-    """
-# Closing file
+            if "[" in test["test"]:
+                nbCrochet = 1
+                testParams = test["test"][test["test"].find("("):-1]
+                print(testParams)
+
+                while type(testParams) == list:
+                    nbCrochet += 1
+                    elemExpected = testParams[0]
+                print(type(test["test"][test["test"].find("[")+1:test["test"].find(",")]))
+                parsedTestParams = str(test["test"]).replace("[", "{").replace("]", "}")
+                if type(testParams) == float or re.match("^.*\[\d.\d.*$", testParams):
+                    parsedTestParams = "new double" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
+                elif type(testParams) == bool or re.match("^.*\[(False|True){1}.*$", testParams):
+                    parsedTestParams = "new boolean" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
+                    parsedTestParams = parsedTestParams.replace("'", "").lower()
+                elif str(testParams).startswith("new"):
+                    testParams = str(testParams)[str(testParams).find(" ") + 1:str(testParams).find("(")]
+                    parsedTestParams = "new " + testParams + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
+                    parsedTestParams = parsedTestParams.replace("'", "")
+                elif type(testParams) == int or re.match("^.*\[\d.*$", testParams):
+                    parsedTestParams = "new int" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
+                elif type(testParams) == str:
+                    parsedTestParams = "new String" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
+                    parsedExpected = parsedTestParams.replace("'", '"')
+
+
+                print(str(test["test"])[:str(test["test"]).find("(")+1] )
+                print(parsedTestParams)
+                assertionResult += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")+1] + parsedTestParams + ")"
+            else:
+                assertionResult += instancesToCall[i] + "." + test["test"]
+
+        if shouldCloseBrackets:
+            assertionResult += ")"
+
+        # ERROR_FEEDBACK
+        if "errorFeedback" in test:
+            errorFeedback = '"' + test["errorFeedback"].replace('"', '\\' + '"') + '"'
+        if "showStudentOutput" in test and test["showStudentOutput"]:
+            errorFeedback += ' + ' + '"' + " | Your code returned : " + '" ' + ' + '
+            if "checkConsole" in test and test["checkConsole"]:
+                errorFeedback += "student_answer"
+
+            elif "[" in test["test"]:
+                errorFeedback += "Arrays.deepToString("
+
+                # add transformation tableau de error
+                nbCrochet = 1
+                testParams = test["test"][test["test"].find("("):-1]
+                print(testParams)
+
+                while type(testParams) == list:
+                    nbCrochet += 1
+                    elemExpected = testParams[0]
+                print(type(test["test"][test["test"].find("[") + 1:test["test"].find(",")]))
+                parsedTestParams = str(test["test"]).replace("[", "{").replace("]", "}")
+                if type(testParams) == float or re.match("^.*\[\d.\d.*$", testParams):
+                    parsedTestParams = "new double" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
+                                                                                                              "{").replace(
+                        "]", "}") + "}"
+                elif type(testParams) == bool or re.match("^.*\[(False|True){1}.*$", testParams):
+                    parsedTestParams = "new boolean" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
+                                                                                                               "{").replace(
+                        "]", "}") + "}"
+                    parsedTestParams = parsedTestParams.replace("'", "").lower()
+                elif str(testParams).startswith("new"):
+                    testParams = str(testParams)[str(testParams).find(" ") + 1:str(testParams).find("(")]
+                    parsedTestParams = "new " + testParams + "[]" * nbCrochet + testParams.replace("(", "{").replace(
+                        "[", "{").replace("]", "}") + "}"
+                    parsedTestParams = parsedTestParams.replace("'", "")
+                elif type(testParams) == int or re.match("^.*\[\d.*$", testParams):
+                    parsedTestParams = "new int" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
+                                                                                                           "{").replace(
+                        "]", "}") + "}"
+                elif type(testParams) == str:
+                    parsedTestParams = "new String" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
+                                                                                                              "{").replace(
+                        "]", "}") + "}"
+                    parsedExpected = parsedTestParams.replace("'", '"')
+
+                print(str(test["test"])[:str(test["test"]).find("(") + 1])
+                print(parsedTestParams)
+                errorFeedback += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")+1] + parsedTestParams + ")"
+                errorFeedback += ")"
+            else:
+                errorFeedback += instancesToCall[i] + "." + test["test"]
+
+        i += 1
+
+    assertionsResults.append(assertionResult)
+    errorsFeedbacks.append(errorFeedback)
+    assertionResult = ""
+
+# --------------------------------------------------------------------------------------------------------------
+
+dataTemplate = {
+    "ADDITIONAL_IMPORTS":   additionalImports,
+    "PREVIOUS_CODE":        previousCode,
+    "STUDENT_INSTANCE":     studentInstance,
+    "tests":                dataExercise["tests"],
+    "askFor":               dataExercise["askFor"],
+    "namesAsk":              namesAsk,
+    "testsName":            testsName,
+    "instancesToCall":      instancesToCall,
+    "assertionsResults":    assertionsResults,
+    "errorsFeedbacks":      errorsFeedbacks,
+}
+
+testFile.write(template.render(dataTemplate))
+
 exerciseDefinition.close()
-templateTestsFile.close()
-testsFile.close()
+testFile.close()

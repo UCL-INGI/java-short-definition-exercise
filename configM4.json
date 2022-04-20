@@ -8,12 +8,14 @@
             "test": "isADN(\"\")",
             "expected": true,
             "errorFeedback": "isADN(\"\") should give false",
-            "showStudentOutput": true
+            "showStudentOutput": true,
+            "hidden": true
         },
         {
             "test": "isADN(\"Z\")",
             "expected": false,
-            "errorFeedback": "isADN(\"Z\") should give false"
+            "errorFeedback": "isADN(\"Z\") should give false",
+            "hidden": true
         },
         {
             "test": "isADN(\"AT\")",
@@ -26,13 +28,29 @@
         {
             "test": "count(\"AT\", 'A')",
             "expected": 1,
-            "errorFeedback": "isADN(\"AT\") should give true"
+            "errorFeedback": "isADN(\"AT\", 'A') should give 1"
         }
         ,
         {
             "test": "count(\"TCT\", 'A')",
             "expected": 0,
-            "errorFeedback": "isADN(\"AT\") should give true"
+            "errorFeedback": "isADN(\"TCT\", 'A) should give 0"
+        },
+        {
+            "test": "testCount()"
+        },
+        {
+            "test": "distanceH(\"AT\", \"AT\")",
+            "expected": 0,
+            "errorFeedback": "isADN(\"AT\", \"AT\") should give 0"
+        },
+        {
+            "test": "distanceH(\"TCT\", \"TGA\")",
+            "expected": 2,
+            "errorFeedback": "distanceH(\"TCT\", \"TGA\") should give 2"
+        },
+        {
+            "test": "testDistanceH()"
         }
     ]
 }

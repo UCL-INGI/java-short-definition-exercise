@@ -5,7 +5,7 @@
         {
             "test": "unite(3)",
             "expected": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-            "errorFeedback": "isADN(\"\") should give false",
+            "errorFeedback": "You should have a 3x3 grid with 1 in the diagonal and 0 in others spot",
             "showStudentOutput": true
         }
     ]
