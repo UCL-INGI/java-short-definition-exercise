@@ -1,0 +1,31 @@
+{
+    "askSignature": false,
+    "askFor": "method",
+    "tests":[
+        {
+            "test": "egal([0.1, 0.2], [0.4, 0.5])",
+            "parametersType": ["double[]", "double[]"],
+            "expected": false,
+            "errorFeedback": "[0.1, 0.2] and [0.4, 0.5] are not equals",
+            "showStudentOutput": true
+        },
+        {
+            "test": "egal([0.1, 0.2], [0.1, 0.2])",
+            "parametersType": ["double[]", "double[]"],
+            "expected": true,
+            "errorFeedback": "[0.1, 0.2] and [0.1, 0.2] are equals"
+        },
+        {
+            "test": "egal([0.4, 0.2], [0.4, 0.5])",
+            "parametersType": ["double[]", "double[]"],
+            "expected": false,
+            "errorFeedback": "[0.4, 0.2] and [0.4, 0.5] are equals"
+        },
+        {
+            "test": "egal([0.2, 0.5], [0.4, 0.5])",
+            "parametersType": ["double[]", "double[]"],
+            "expected": false,
+            "errorFeedback": "[0.2, 0.5] and [0.4, 0.5] are not equals"
+        }
+    ]
+}

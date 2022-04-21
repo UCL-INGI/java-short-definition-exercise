@@ -6,30 +6,29 @@
         {
             "previousCalls": "ajoute(1)",
             "test": "toString()",
-            "expected": "1 |",
-            "errorFeedback": "depth() should give 1"
+            "expected": "1 | ",
+            "errorFeedback": "ajoute(1) did not work"
         },
         {
             "previousCalls": "ajoute(3)",
-            "test": "depth()",
-            "expected": 2,
-            "errorFeedback": "depth() should give 2"
+            "test": "toString()",
+            "expected": "1 | 3 | ",
+            "errorFeedback": "ajoute(3) did not work"
         },
         {
             "test": "retire()",
             "expected": 3,
-            "errorFeedback": "pop() should give 3"
+            "errorFeedback": "retire() should give 3"
         },
         {
             "test": "retire()",
             "expected": 1,
-            "errorFeedback": "pop() should give 1"
+            "errorFeedback": "retire() should give 1"
         },
         {
             "test": "retire()",
-            "shouldFail": true,
-            "exceptionExpected": "IllegalStateException",
-            "errorFeedback": "pop on empty"
+            "expected": -1,
+            "errorFeedback": "retire on empty"
         }
     ]
 }

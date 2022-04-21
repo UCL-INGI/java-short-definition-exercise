@@ -33,8 +33,9 @@ The expected answer.
 Note that if you are expecting an array, java.util.Arrays will be imported 
 and Arrays.deepEquals will be used in the test. If it is an array of integers,
 then it will be compared with == as int cannot be casted to objects.
-If you have " in your parameters, then you should escape it with \\.
-This field is optional if you are expecting an exception to be thrown. 
+If you have " in your parameters, then you should escape it with \".
+This field is optional in case you are not waiting for a result
+but you are expecting an exception to be thrown. 
 
 
 - "errorFeedback" : "" : The error message if the assertion does not return the expected result.
@@ -88,3 +89,9 @@ incomplete test class.
 The result of the student will be appended to the ``errorFeedback`` message.
 This information is optional (false by default) because it might be a good idea to hide the student
 result in order to help the student to debug his code by reading it and understand what happened.
+
+
+- "parametersType": ["String", "char"] - (optionnal) if your `test` field has an array in parameters
+or if you are asking for a class, you should precise the type of your parameters in order to help the script
+building the array or checking that the student has the correct parameters
+for a method in the case where he should write an entire class

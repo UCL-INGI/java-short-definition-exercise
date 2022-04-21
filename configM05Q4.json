@@ -1,0 +1,18 @@
+{
+    "askSignature": true,
+    "askFor": "method",
+    "tests":[
+        {
+            "test": "croissant([1, 2, 3])",
+            "parametersType": ["int[]"],
+            "expected": true,
+            "errorFeedback": "mauvais resultat"
+        },
+        {
+            "test": "croissant([-3, -4, -5])",
+            "parametersType": ["int[]"],
+            "expected": false,
+            "errorFeedback": "mauvais resultat"
+        }
+    ]
+}

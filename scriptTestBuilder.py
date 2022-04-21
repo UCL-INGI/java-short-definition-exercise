@@ -1,11 +1,7 @@
 import json
-import re
-
 import jinja2
 
-# params pour getDeclared
-
-exerciseDefinition = open('configM4.json')
+exerciseDefinition = open('configM01Q11.json')
 dataExercise = json.load(exerciseDefinition)
 
 testFile = open('Tests.java', 'w+')
@@ -18,7 +14,7 @@ template = templateEnv.get_template(TEMPLATE_FILE)
 # IMPORTS
 additionalImports = ""
 for test in dataExercise["tests"]:
-    if "Arrays" not in additionalImports and "expected" in test and str(test["expected"]).startswith("["):
+    if "Arrays" not in additionalImports and "expected" in test and (str(test["expected"]).startswith("[") or "[" in test["test"]):
         additionalImports += "import java.util.Arrays;\n"
 
     if "ByteArrayOutputStream" not in additionalImports and "checkConsole" in test:
@@ -91,7 +87,7 @@ else:
 
             for parameter in parametersList:
                 if parameter[1:].startswith("new "):
-                    studentInstance += str(parameter)[1:]
+                    studentInstance += str(parameter)[1:-1]
                 else:
                     studentInstance += str(parameter).replace("'", "\"")
 
@@ -141,33 +137,34 @@ for test in dataExercise["tests"]:
             assertionResult += str(test["expected"]).lower() + " == "
 
         elif "expected" in test and "[" in str(test["expected"]):
-            if type(test["expected"][0]) == int:
+            if isinstance(test["expected"][0], int):
                 assertionResult += "Arrays.equals(new int[]" + str(test["expected"]).replace("[", "{").replace("]", "}") + ", "
             else:
                 assertionResult += "Arrays.deepEquals(new "
                 nbCrochet = 0
                 elemExpected = test["expected"]
-                while type(elemExpected) == list:
+                while isinstance(elemExpected, list):
                     nbCrochet += 1
                     elemExpected = elemExpected[0]
 
                 parsedExpected = str(test["expected"]).replace("[", "{").replace("]", "}") + ", "
-                if type(elemExpected) == float:
+                if isinstance(elemExpected, float):
                     assertionResult += "double" + "[]" * nbCrochet
-                elif type(elemExpected) == bool:
+                elif isinstance(elemExpected, bool):
                     assertionResult += "boolean" + "[]" * nbCrochet
                     parsedExpected = parsedExpected.replace("'", "").lower()
                 elif str(elemExpected).startswith("new"):
                     elemExpected = str(elemExpected)[str(elemExpected).find(" ")+1:str(elemExpected).find("(")]
                     assertionResult += elemExpected + "[]" * nbCrochet
                     parsedExpected = parsedExpected.replace("'", "")
-                elif type(elemExpected) == str:
+                elif isinstance(elemExpected, str):
                     assertionResult += "String" + "[]" * nbCrochet
                     parsedExpected = parsedExpected.replace("'", '"')
-                elif type(elemExpected) == int:
+                elif isinstance(elemExpected, int):
                     assertionResult += "int" + "[]" * nbCrochet
-
+                print("182 " + parsedExpected)
                 assertionResult += parsedExpected
+
             shouldCloseBrackets = True
 
         elif "expected" in test:
@@ -180,34 +177,17 @@ for test in dataExercise["tests"]:
                 i += 1
 
             if "[" in test["test"]:
-                nbCrochet = 1
-                testParams = test["test"][test["test"].find("("):-1]
-                print(testParams)
+                assertionResult += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")] + "("
+                iParam = 0
+                if "parametersType" in test:
+                    for e in str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {"):
+                        print("188 - " + e.replace("]", "}") )
+                        assertionResult += "new " + test["parametersType"][0] + "{" + e.replace("]", "}") + "}"
 
-                while type(testParams) == list:
-                    nbCrochet += 1
-                    elemExpected = testParams[0]
-                print(type(test["test"][test["test"].find("[")+1:test["test"].find(",")]))
-                parsedTestParams = str(test["test"]).replace("[", "{").replace("]", "}")
-                if type(testParams) == float or re.match("^.*\[\d.\d.*$", testParams):
-                    parsedTestParams = "new double" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
-                elif type(testParams) == bool or re.match("^.*\[(False|True){1}.*$", testParams):
-                    parsedTestParams = "new boolean" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
-                    parsedTestParams = parsedTestParams.replace("'", "").lower()
-                elif str(testParams).startswith("new"):
-                    testParams = str(testParams)[str(testParams).find(" ") + 1:str(testParams).find("(")]
-                    parsedTestParams = "new " + testParams + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
-                    parsedTestParams = parsedTestParams.replace("'", "")
-                elif type(testParams) == int or re.match("^.*\[\d.*$", testParams):
-                    parsedTestParams = "new int" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
-                elif type(testParams) == str:
-                    parsedTestParams = "new String" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[", "{").replace("]", "}") + "}"
-                    parsedExpected = parsedTestParams.replace("'", '"')
-
-
-                print(str(test["test"])[:str(test["test"]).find("(")+1] )
-                print(parsedTestParams)
-                assertionResult += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")+1] + parsedTestParams + ")"
+                        if iParam < len(str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {")) - 1:
+                            assertionResult += ", "
+                        iParam += 1
+                    assertionResult += ")"
             else:
                 assertionResult += instancesToCall[i] + "." + test["test"]
 
@@ -222,47 +202,27 @@ for test in dataExercise["tests"]:
             if "checkConsole" in test and test["checkConsole"]:
                 errorFeedback += "student_answer"
 
-            elif "[" in test["test"]:
-                errorFeedback += "Arrays.deepToString("
+            elif "[" in str(test["test"]):
+                if "[" in str(test["expected"]):
+                    errorFeedback += "Arrays.deepToString("
 
                 # add transformation tableau de error
-                nbCrochet = 1
-                testParams = test["test"][test["test"].find("("):-1]
-                print(testParams)
+                errorFeedback  += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")] + "("
+                iParam = 0
+                print(str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {"))
+                print(len(str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {")) - 1)
+                if "parametersType" in test:
+                    for e in str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {"):
+                        errorFeedback += "new " + test["parametersType"][0] + "{" + e.replace("]", "}") + "}"
+                        print(iParam)
+                        if iParam < len(str(test["test"]).replace("[", "{").split("({")[1].split("])")[0].split("], {")) - 1:
+                            errorFeedback += ", "
+                        iParam += 1
+                    errorFeedback += ")"
 
-                while type(testParams) == list:
-                    nbCrochet += 1
-                    elemExpected = testParams[0]
-                print(type(test["test"][test["test"].find("[") + 1:test["test"].find(",")]))
-                parsedTestParams = str(test["test"]).replace("[", "{").replace("]", "}")
-                if type(testParams) == float or re.match("^.*\[\d.\d.*$", testParams):
-                    parsedTestParams = "new double" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
-                                                                                                              "{").replace(
-                        "]", "}") + "}"
-                elif type(testParams) == bool or re.match("^.*\[(False|True){1}.*$", testParams):
-                    parsedTestParams = "new boolean" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
-                                                                                                               "{").replace(
-                        "]", "}") + "}"
-                    parsedTestParams = parsedTestParams.replace("'", "").lower()
-                elif str(testParams).startswith("new"):
-                    testParams = str(testParams)[str(testParams).find(" ") + 1:str(testParams).find("(")]
-                    parsedTestParams = "new " + testParams + "[]" * nbCrochet + testParams.replace("(", "{").replace(
-                        "[", "{").replace("]", "}") + "}"
-                    parsedTestParams = parsedTestParams.replace("'", "")
-                elif type(testParams) == int or re.match("^.*\[\d.*$", testParams):
-                    parsedTestParams = "new int" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
-                                                                                                           "{").replace(
-                        "]", "}") + "}"
-                elif type(testParams) == str:
-                    parsedTestParams = "new String" + "[]" * nbCrochet + testParams.replace("(", "{").replace("[",
-                                                                                                              "{").replace(
-                        "]", "}") + "}"
-                    parsedExpected = parsedTestParams.replace("'", '"')
+                if "[" in str(test["expected"]):
+                    errorFeedback += ")"
 
-                print(str(test["test"])[:str(test["test"]).find("(") + 1])
-                print(parsedTestParams)
-                errorFeedback += instancesToCall[i] + "." + str(test["test"])[:str(test["test"]).find("(")+1] + parsedTestParams + ")"
-                errorFeedback += ")"
             else:
                 errorFeedback += instancesToCall[i] + "." + test["test"]
 
